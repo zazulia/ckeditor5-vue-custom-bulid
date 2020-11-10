@@ -114,4 +114,4 @@ Editor.builtinPlugins = [
 	WordCount
 ];
 
-export default { Editor };
+export default Editor;
