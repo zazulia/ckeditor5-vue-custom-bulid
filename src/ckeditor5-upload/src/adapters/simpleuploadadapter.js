@@ -120,7 +120,7 @@ class Adapter {
     upload() {
         return this.loader.file
             .then(file => new Promise((resolve, reject) => {
-                this._initRequest();
+                this._initRequest(file);
                 ///this._initListeners(resolve, reject, file);
                 ///this._sendRequest(file);
             }));
