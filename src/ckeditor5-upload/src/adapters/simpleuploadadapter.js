@@ -214,9 +214,7 @@ class Adapter {
         // Prepare the form data.
         const data = new FormData();
         
-        data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', new Blob(file));
-        
-        console.log('xhr', this.xhr, new Blob(file));
+        data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', file);
 
 		// Send the request.
 		this.xhr.send( data );
