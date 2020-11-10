@@ -169,6 +169,8 @@ class Adapter {
 		xhr.addEventListener( 'abort', () => reject() );
 		xhr.addEventListener( 'load', () => {
 			const response = xhr.response;
+            
+            console.log('load', response);
 
 			if ( !response || response.error ) {
 				return reject( response && response.error && response.error.message ? response.error.message : genericErrorText );
