@@ -148,7 +148,7 @@ class Adapter {
 	_initRequest() {
 		const xhr = new XMLHttpRequest();
 
-		xhr.open( 'POST', this.options.uploadUrl, true );
+		xhr.open('POST', this.options.uploadUrl, true);
 		xhr.responseType = '';
         
         this.xhr = xhr;
@@ -220,7 +220,9 @@ class Adapter {
         
         data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', file);
         
-        console.log(data);
+        for (item of data) {
+            console.log(item);
+        }
 
 		// Send the request.
 		this.xhr.send( data );
