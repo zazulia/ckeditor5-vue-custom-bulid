@@ -121,8 +121,8 @@ class Adapter {
         return this.loader.file
             .then(file => new Promise((resolve, reject) => {
                 this._initRequest();
-                this._initListeners(resolve, reject, file);
-                this._sendRequest(file);
+                ///this._initListeners(resolve, reject, file);
+                ///this._sendRequest(file);
             }));
     }
 
@@ -146,7 +146,41 @@ class Adapter {
      * @private
      */
     _initRequest() {
-        this.xhr = new XMLHttpRequest();
+        // this.xhr = new XMLHttpRequest();
+        
+        const data = this.createBundledUpload(file, this.options);
+
+        const xhr = new XMLHttpRequest()
+
+        xhr.upload.addEventListener('loadstart', (ev) => {
+
+        })
+
+        xhr.upload.addEventListener('progress', (ev) => {
+
+        })
+
+        xhr.addEventListener('load', (ev) => {
+
+        })
+
+        xhr.addEventListener('error', (ev) => {
+
+        })
+
+        xhr.open('POST', this.options.uploadUrl, true);
+
+        // IE10 does not allow setting `withCredentials` and `responseType`
+        // before `open()` is called.
+
+        xhr.withCredentials = this.options.withCredentials;
+
+        Object.keys(this.options.headers).forEach((header) => {
+            xhr.setRequestHeader(header, this.options.headers[header]);
+        });
+
+        xhr.send(data);
+        
     }
 
     /**
@@ -218,6 +252,20 @@ class Adapter {
 
         // Send the request.
         this.xhr.send(data);
+    }
+    
+    createBundledUpload(file, opts) {
+        
+        const formPost = new FormData();
+        const dataWithUpdatedType = setTypeInBlob(file);
+
+        if (file.name) {
+            formPost.append(opts.fieldName, dataWithUpdatedType, file.name);
+        } else {
+            formPost.append(opts.fieldName, dataWithUpdatedType);
+        }
+
+        return formPost;
     }
 
     setTypeInBlob(file) {
