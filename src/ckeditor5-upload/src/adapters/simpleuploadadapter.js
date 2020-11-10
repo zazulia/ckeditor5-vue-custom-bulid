@@ -216,7 +216,7 @@ class Adapter {
         
         data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', file );
         
-        console.log('xhr', this.xhr);
+        console.log('xhr', this.xhr, file);
 
 		// Send the request.
 		this.xhr.send( data );
