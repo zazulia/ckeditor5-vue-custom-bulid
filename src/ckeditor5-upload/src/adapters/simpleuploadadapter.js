@@ -220,7 +220,7 @@ class Adapter {
         
         data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', file);
         
-        for (item of data) {
+        for (const item of data) {
             console.log(item);
         }
 
