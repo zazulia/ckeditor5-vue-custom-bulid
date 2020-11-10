@@ -224,7 +224,7 @@ class Adapter {
     }
 
     setTypeInBlob(file) {
-        const dataWithUpdatedType = file.data.slice(0, file.data.size, file.meta.type);
+        const dataWithUpdatedType = file.slice(0, file.size, file.type);
         return dataWithUpdatedType;
     }
 }
