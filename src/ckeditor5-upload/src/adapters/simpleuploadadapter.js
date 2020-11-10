@@ -146,12 +146,7 @@ class Adapter {
      * @private
      */
     _initRequest() {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('POST', this.options.uploadUrl, true);
-        xhr.responseType = '';
-
-        this.xhr = xhr;
+        this.xhr = new XMLHttpRequest();
     }
 
     /**
@@ -172,8 +167,6 @@ class Adapter {
         this.xhr.addEventListener('abort', () => reject());
         this.xhr.addEventListener('load', () => {
             const response = _this.xhr.response;
-
-            console.log('load', response);
 
             if (!response || response.error) {
                 return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
@@ -201,6 +194,10 @@ class Adapter {
      * @param {File} file File instance to be uploaded.
      */
     _sendRequest(file) {
+        
+        this.xhr.open('POST', this.options.uploadUrl, true);
+        this.xhr.responseType = '';
+        
         // Set headers if specified.
         const headers = this.options.headers || {};
 
