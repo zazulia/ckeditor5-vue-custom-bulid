@@ -165,11 +165,7 @@ class Adapter {
 		const loader = this.loader;
 		const genericErrorText = `Couldn't upload file: ${ file.name }.`;
 
-		xhr.addEventListener( 'error', () => {
-            
-            console.log(xhr.responseText);
-            
-        } );
+		xhr.addEventListener( 'error', () => reject( genericErrorText ) );
 		xhr.addEventListener( 'abort', () => reject() );
 		xhr.addEventListener( 'load', () => {
 			const response = xhr.response;
@@ -208,9 +204,10 @@ class Adapter {
 		// Use the withCredentials flag if specified.
 		const withCredentials = this.options.withCredentials || false;
 
-		for ( const headerName of Object.keys( headers ) ) {
-			this.xhr.setRequestHeader( headerName, headers[ headerName ] );
-		}
+        
+        Object.keys(headers).forEach((headerName) => {
+            this.xhr.setRequestHeader(headerName, headers[headerName])
+        });
 
 		this.xhr.withCredentials = withCredentials;
         
@@ -218,6 +215,8 @@ class Adapter {
         const data = new FormData();
         
         data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', file );
+        
+        console.log('xhr', this.xhr);
 
 		// Send the request.
 		this.xhr.send( data );
