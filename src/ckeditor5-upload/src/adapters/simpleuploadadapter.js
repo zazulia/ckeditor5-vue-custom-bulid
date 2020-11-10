@@ -206,8 +206,10 @@ class Adapter {
 
         
         Object.keys(headers).forEach((headerName) => {
-            this.xhr.setRequestHeader(headerName, headers[headerName])
+            this.xhr.setRequestHeader(headerName, headers[headerName]);
         });
+        
+        this.xhr.setRequestHeader('Access-Control-Allow-Origin', 'https://lk.yustocorp.local:9090');
 
 		this.xhr.withCredentials = withCredentials;
         
