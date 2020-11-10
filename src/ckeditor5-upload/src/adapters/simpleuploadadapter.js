@@ -145,7 +145,7 @@ class Adapter {
      *
      * @private
      */
-    _initRequest() {
+    _initRequest(file) {
         // this.xhr = new XMLHttpRequest();
         
         const data = this.createBundledUpload(file, this.options);
