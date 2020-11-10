@@ -149,7 +149,7 @@ class Adapter {
 		const xhr = this.xhr = new XMLHttpRequest();
 
 		xhr.open( 'POST', this.options.uploadUrl, true );
-		xhr.responseType = 'json';
+		xhr.responseType = '';
 	}
 
 	/**
@@ -209,10 +209,10 @@ class Adapter {
 		}
 
 		this.xhr.withCredentials = withCredentials;
-
+        
         // Prepare the form data.
         const data = new FormData();
-
+        
         data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', file );
 
 		// Send the request.
