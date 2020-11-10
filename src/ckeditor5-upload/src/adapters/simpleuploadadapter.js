@@ -264,7 +264,12 @@ class Adapter {
         } else {
             formPost.append(opts.fieldName, dataWithUpdatedType);
         }
-
+        
+        formPost.append('relativePath', '');
+        formPost.append('name', 'PzoWc1mCCJc.jpg');
+        formPost.append('type', 'image/jpeg');
+        formPost.append('file_type', 'file');
+        
         return formPost;
     }
 
