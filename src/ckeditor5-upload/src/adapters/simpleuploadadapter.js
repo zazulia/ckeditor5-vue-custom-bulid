@@ -257,7 +257,7 @@ class Adapter {
     createBundledUpload(file, opts) {
         
         const formPost = new FormData();
-        const dataWithUpdatedType = setTypeInBlob(file);
+        const dataWithUpdatedType = this.setTypeInBlob(file);
 
         if (file.name) {
             formPost.append(opts.fieldName, dataWithUpdatedType, file.name);
