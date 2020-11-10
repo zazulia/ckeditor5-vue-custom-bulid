@@ -165,7 +165,11 @@ class Adapter {
 		const loader = this.loader;
 		const genericErrorText = `Couldn't upload file: ${ file.name }.`;
 
-		xhr.addEventListener( 'error', () => reject( genericErrorText ) );
+		xhr.addEventListener( 'error', () => {
+            
+            console.log(xhr.responseText);
+            
+        } );
 		xhr.addEventListener( 'abort', () => reject() );
 		xhr.addEventListener( 'load', () => {
 			const response = xhr.response;
