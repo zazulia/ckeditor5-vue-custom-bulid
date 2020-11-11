@@ -120,9 +120,9 @@ class Adapter {
     upload() {
         return this.loader.file
             .then(file => new Promise((resolve, reject) => {
-                this._initRequest(file);
-                ///this._initListeners(resolve, reject, file);
-                ///this._sendRequest(file);
+                this._initRequest();
+                this._initListeners(resolve, reject, file);
+                this._sendRequest(file);
             }));
     }
 
@@ -136,6 +136,10 @@ class Adapter {
         if (this.xhr) {
             this.xhr.abort();
         }
+        
+        if (this.xhrLoad) {
+            this.xhrLoad.abort();
+        }
     }
 
     /**
@@ -145,42 +149,9 @@ class Adapter {
      *
      * @private
      */
-    _initRequest(file) {
-        // this.xhr = new XMLHttpRequest();
-        
-        const data = this.createBundledUpload(file, this.options);
-
-        const xhr = new XMLHttpRequest()
-
-        xhr.upload.addEventListener('loadstart', (ev) => {
-
-        })
-
-        xhr.upload.addEventListener('progress', (ev) => {
-
-        })
-
-        xhr.addEventListener('load', (ev) => {
-
-        })
-
-        xhr.addEventListener('error', (ev) => {
-
-        })
-
-        xhr.open('POST', this.options.uploadUrl, true);
-
-        // IE10 does not allow setting `withCredentials` and `responseType`
-        // before `open()` is called.
-
-        xhr.withCredentials = this.options.withCredentials;
-
-        Object.keys(this.options.headers).forEach((header) => {
-            xhr.setRequestHeader(header, this.options.headers[header]);
-        });
-
-        xhr.send(data);
-        
+    _initRequest() {
+        this.xhr = new XMLHttpRequest();
+        this.xhrLoad = new XMLHttpRequest();
     }
 
     /**
@@ -198,21 +169,62 @@ class Adapter {
         const genericErrorText = `Couldn't upload file: ${file.name}.`;
 
         this.xhr.addEventListener('error', () => reject(genericErrorText));
+        
         this.xhr.addEventListener('abort', () => reject());
+        
         this.xhr.addEventListener('load', () => {
             const response = _this.xhr.response;
 
             if (!response || response.error) {
                 return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
             }
-
-            resolve(response.url ? {default: response.url} : response.urls);
+            
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
+                _this._setRequestLoad(resolve, reject, file, response.data.uuid);
+            } else {
+                reject(genericErrorText);
+            }
         });
 
         // Upload progress when it is supported.
         /* istanbul ignore else */
         if (this.xhr.upload) {
             this.xhr.upload.addEventListener('progress', evt => {
+                if (evt.lengthComputable) {
+                    loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;
+                }
+            });
+        }
+    }
+    
+    _initListenersLoad(resolve, reject, file, uuid) {
+        let _this = this;
+
+        const loader = this.loader;
+        const genericErrorText = `Couldn't load file: ${file.name}.`;
+
+        this.xhrLoad.addEventListener('error', () => reject(genericErrorText));
+        
+        this.xhrLoad.addEventListener('abort', () => reject());
+        
+        this.xhrLoad.addEventListener('load', () => {
+            const response = _this.xhrLoad.response;
+
+            if (!response || response.error) {
+                return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
+            }
+            
+            console.log(response.data);
+            
+            
+            // resolve(response.url ? {default: response.url} : response.urls);
+        });
+
+        // Upload progress when it is supported.
+        /* istanbul ignore else */
+        if (this.xhrLoad.upload) {
+            this.xhrLoad.upload.addEventListener('progress', evt => {
                 if (evt.lengthComputable) {
                     loader.uploadTotal = evt.total;
                     loader.uploaded = evt.loaded;
@@ -229,8 +241,11 @@ class Adapter {
      */
     _sendRequest(file) {
         
+        const data = this._createFormUpload(file, this.options);
+        
         this.xhr.open('POST', this.options.uploadUrl, true);
-        this.xhr.responseType = '';
+        
+        this.xhr.responseType = this.options.responseType || '';
         
         // Set headers if specified.
         const headers = this.options.headers || {};
@@ -238,42 +253,74 @@ class Adapter {
         // Use the withCredentials flag if specified.
         const withCredentials = this.options.withCredentials || false;
 
-
         Object.keys(headers).forEach((headerName) => {
             this.xhr.setRequestHeader(headerName, headers[headerName]);
         });
 
         this.xhr.withCredentials = withCredentials;
 
-        // Prepare the form data.
-        const data = new FormData();
-
-        data.append(this.options.hasOwnProperty('fieldName') ? this.options.fieldName : 'upload', this.setTypeInBlob(file), file.name);
-
         // Send the request.
         this.xhr.send(data);
     }
     
-    createBundledUpload(file, opts) {
+    
+    _sendRequestLoad(resolve, reject, file, uuid) {
+        
+        this._initListenersLoad(resolve, reject, file, uuid);
+        
+        const data = this._createFormLoad(file, this.options);
+                
+        this.xhrLoad.open('GET', this.options.loadUrl, true);
+                
+        // Set headers if specified.
+        const headers = this.options.headers || {};
+
+        // Use the withCredentials flag if specified.
+        const withCredentials = this.options.withCredentials || false;
+
+        Object.keys(headers).forEach((headerName) => {
+            this.xhrLoad.setRequestHeader(headerName, headers[headerName]);
+        });
+
+        this.xhrLoad.withCredentials = withCredentials;
+
+        // Send the request.
+        this.xhrLoad.send(data);
+    }
+    
+    _createFormLoad(uuid, opts) {
+        
+        const data = {};
+        
+        params.files = [uuid];
+        params.fileinfo = opts.fileInfo ? opts.fileInfo : false;
+        params.presets = opts.presets.length ? opts.presets : [];
+
+        
+        return formPost;
+    }
+    
+    
+    _createFormUpload(file, opts) {
         
         const formPost = new FormData();
-        const dataWithUpdatedType = this.setTypeInBlob(file);
+        const dataWithUpdatedType = this._setTypeInBlob(file);
 
         if (file.name) {
             formPost.append(opts.fieldName, dataWithUpdatedType, file.name);
+            formPost.append('name', file.name);
         } else {
             formPost.append(opts.fieldName, dataWithUpdatedType);
         }
         
-        formPost.append('relativePath', '');
-        formPost.append('name', 'PzoWc1mCCJc.jpg');
-        formPost.append('type', 'image/jpeg');
-        formPost.append('file_type', 'file');
+        if (file.type) {
+            formPost.append('type', file.type);
+        }
         
         return formPost;
     }
 
-    setTypeInBlob(file) {
+    _setTypeInBlob(file) {
         const dataWithUpdatedType = file.slice(0, file.size, file.type);
         return dataWithUpdatedType;
     }
