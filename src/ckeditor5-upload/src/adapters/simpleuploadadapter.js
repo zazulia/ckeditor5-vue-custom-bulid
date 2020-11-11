@@ -120,9 +120,7 @@ class Adapter {
     upload() {
         return this.loader.file
             .then(file => new Promise((resolve, reject) => {
-                this._initRequest();
-                this._initListeners(resolve, reject, file);
-                this._sendRequest(file);
+                this._initRequest(resolve, reject, file);
             }));
     }
 
@@ -140,6 +138,10 @@ class Adapter {
         if (this.xhrLoad) {
             this.xhrLoad.abort();
         }
+        
+        if (this.xhrPresets) {
+            this.xhrPresets.abort();
+        }
     }
 
     /**
@@ -149,10 +151,88 @@ class Adapter {
      *
      * @private
      */
-    _initRequest() {
+    _initRequest(resolve, reject, file) {
+        let _this = this;
+        
         this.xhr = new XMLHttpRequest();
         this.xhrLoad = new XMLHttpRequest();
+        this.xhrPresets = new XMLHttpRequest();
+        
+        
+        this._sendRequestPresets(resolve, reject, file);
     }
+    
+    callbackPromise(resolve, reject, file) {
+        this._initListeners(resolve, reject, file);
+        this._sendRequest(file);
+    }
+    
+    _initListenersPresets(resolve, reject, file) {
+        let _this = this;
+
+        const loader = this.loader;
+
+        this.xhrPresets.addEventListener('error', () => _this.callbackPromise(resolve, reject, file));
+        
+        this.xhrPresets.addEventListener('abort', () => _this.callbackPromise(resolve, reject, file));
+        
+        this.xhrPresets.addEventListener('load', () => {
+            
+            const response = JSON.parse(_this.xhrPresets.response);
+                        
+            if (_this.xhr.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
+                
+                let presets = response.data.presets;
+                
+                if (!_this.options.presets.length) {
+                    
+                    _this.options.presets = [];
+                    
+                    for (let index in presets) {
+                        
+                        _this.options.presets.push(presets[index].name);
+                    }
+                }
+                
+            }
+            
+            _this.callbackPromise(resolve, reject, file);
+        });
+
+        // Upload progress when it is supported.
+        /* istanbul ignore else */
+        if (this.xhrPresets.upload) {
+            this.xhrPresets.upload.addEventListener('progress', evt => {
+                if (evt.lengthComputable) {
+                    loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;
+                }
+            });
+        }
+    }
+    
+    _sendRequestPresets(resolve, reject, file) {
+        
+        this._initListenersPresets(resolve, reject, file);
+                
+        this.xhrPresets.open('GET', this.options.presetUrl, true);
+                
+        // Set headers if specified.
+        const headers = this.options.headers || {};
+
+        // Use the withCredentials flag if specified.
+        const withCredentials = this.options.withCredentials || false;
+
+        Object.keys(headers).forEach((headerName) => {
+            this.xhrPresets.setRequestHeader(headerName, headers[headerName]);
+        });
+
+        this.xhrPresets.withCredentials = withCredentials;
+
+        // Send the request.
+        this.xhrPresets.send();
+    }
+    
 
     /**
      * Initializes XMLHttpRequest listeners
@@ -206,7 +286,7 @@ class Adapter {
         const loader = this.loader;
         const genericErrorText = `Couldn't load file: ${file.name}.`;
         
-        const presets = this.options.presets.length ? opts.presets : [];
+        const presets = this.options.presets.length ? this.options.presets : [];
 
         this.xhrLoad.addEventListener('error', () => reject(genericErrorText));
         
@@ -285,7 +365,6 @@ class Adapter {
         this.xhr.send(data);
     }
     
-    
     _sendRequestLoad(resolve, reject, file, uuid) {
         
         this._initListenersLoad(resolve, reject, file, uuid);
@@ -310,18 +389,6 @@ class Adapter {
         this.xhrLoad.send(data);
     }
     
-    _createFormLoad(uuid, opts) {
-        
-        const data = {};
-        
-        data.files = [uuid];
-        data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
-        data.presets = opts.presets.length ? opts.presets : ['original'];
-
-        
-        return data;
-    }
-    
     _getQueryArray(obj, path = [], result = []) {        
         Object.entries(obj).reduce((acc, [ k, v ]) => {
             path.push(k);
@@ -339,7 +406,19 @@ class Adapter {
     }
     
     _getQueryString(obj) {
-        return this.getQueryArray(obj).join('&');
+        return this._getQueryArray(obj).join('&');
+    }
+    
+    _createFormLoad(uuid, opts) {
+        
+        const data = {};
+        
+        data.files = [uuid];
+        data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
+        data.presets = opts.presets.length ? opts.presets : ['original'];
+
+        
+        return data;
     }
     
     
