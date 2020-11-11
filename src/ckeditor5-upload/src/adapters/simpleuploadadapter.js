@@ -193,7 +193,7 @@ class Adapter {
                     
                     for (let index in presets) {
                         
-                        _this.options.presets.push(presets[index].name);
+                        _this.options.presets.push(presets[index].id);
                     }
                 }
                 
