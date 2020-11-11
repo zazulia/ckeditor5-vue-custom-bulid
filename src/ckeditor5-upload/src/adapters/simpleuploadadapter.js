@@ -261,8 +261,6 @@ class Adapter {
             if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
                 return reject(_this.xhr.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
             }
-                        
-            console.log(response, typeof response);
             
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
                 _this._sendRequestLoad(resolve, reject, file, response.data.uuid);
@@ -310,7 +308,7 @@ class Adapter {
                 for (let index in files) {
                     
                     for (let indexPreset in presets) {
-                        let linkStr = _thisthis.getLink(files[index][presets[indexPreset]].links);
+                        let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
                         urls.push(linkStr);
                     }
                 }
