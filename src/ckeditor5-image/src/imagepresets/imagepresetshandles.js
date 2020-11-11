@@ -1,5 +1,4 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import WidgetResize from '@ckeditor/ckeditor5-widget/src/widgetresize';
 
 
 export default class ImagePresetsHandles extends Plugin {
@@ -7,7 +6,7 @@ export default class ImagePresetsHandles extends Plugin {
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [ WidgetResize ];
+		return [];
 	}
 
 	/**

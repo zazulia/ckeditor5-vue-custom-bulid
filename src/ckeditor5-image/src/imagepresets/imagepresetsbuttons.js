@@ -47,6 +47,8 @@ export default class ImagePresetsButtons extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
+        console.log('ImagePresetsButtons');
+        
 		const editor = this.editor;
 		const options = editor.config.get('image.presetsOptions');
 		const command = editor.commands.get('imagePresets');
@@ -54,7 +56,7 @@ export default class ImagePresetsButtons extends Plugin {
 		this.bind('isEnabled').to(command);
 
 		for (const option of options) {
-			this._registerImagePresetsButton( option );
+			this._registerImagePresetsButton(option);
 		}
 
 		this._registerImagePresetsDropdown( options );
