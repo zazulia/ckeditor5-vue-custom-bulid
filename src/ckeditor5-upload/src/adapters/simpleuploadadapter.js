@@ -168,9 +168,10 @@ class Adapter {
     }
     
     _initListenersPresets(resolve, reject, file) {
+        
         let _this = this;
 
-        const loader = this.loader;
+        let loader = this.loader;
 
         this.xhrPresets.addEventListener('error', () => _this.callbackPromise(resolve, reject, file));
         
@@ -178,7 +179,7 @@ class Adapter {
         
         this.xhrPresets.addEventListener('load', () => {
             
-            const response = JSON.parse(_this.xhrPresets.response);
+            let response = JSON.parse(_this.xhrPresets.response);
                         
             if (_this.xhr.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
                 
