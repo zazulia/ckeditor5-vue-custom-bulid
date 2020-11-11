@@ -450,10 +450,10 @@ class Adapter {
     }
     
     
-    _getLink(links) {
+    getLink(links) {
         let str = '';
 
-        if (!this._isEmptyObject(links)) {
+        if (!this.isEmptyObject(links)) {
             let keys = Object.keys(links);
 
             if (keys.length === 1) {
@@ -471,7 +471,7 @@ class Adapter {
         return str;
     }
     
-    _isEmptyObject(obj) {
+    isEmptyObject(obj) {
         for (let i in obj) {
             if (obj.hasOwnProperty(i)) {
                 return false;
