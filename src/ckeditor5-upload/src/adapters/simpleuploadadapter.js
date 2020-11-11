@@ -179,8 +179,8 @@ class Adapter {
                 return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
             }
             
-            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
-                _this._setRequestLoad(resolve, reject, file, response.data.uuid);
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('data') && response.data.data.hasOwnProperty('uuid') && response.data.data.uuid) {
+                _this._setRequestLoad(resolve, reject, file, response.data.data.uuid);
             } else {
                 reject(genericErrorText);
             }
