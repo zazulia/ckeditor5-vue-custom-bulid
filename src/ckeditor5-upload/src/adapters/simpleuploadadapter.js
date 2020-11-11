@@ -393,7 +393,7 @@ class Adapter {
     _getQueryArray(obj, path = [], result = []) {
         let _this = this;
         
-        Object.entries(obj).reduce((acc, [ k, v ]) => {
+        return Object.entries(obj).reduce((acc, [ k, v ]) => {
             path.push(k);
 
             if (v instanceof Object) {
@@ -410,7 +410,7 @@ class Adapter {
     
     _getQueryString(obj) {
         return this._getQueryArray(obj).join('&');
-    }
+    }    
     
     _createFormLoad(uuid, opts) {
         
