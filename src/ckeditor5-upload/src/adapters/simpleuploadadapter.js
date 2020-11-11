@@ -179,9 +179,13 @@ class Adapter {
                 return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
             }
             
+            console.log(response);
+            
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('data') && response.data.data.hasOwnProperty('uuid') && response.data.data.uuid) {
+                console.log('load resolve');
                 _this._setRequestLoad(resolve, reject, file, response.data.data.uuid);
             } else {
+                console.log('load reject');
                 reject(genericErrorText);
             }
         });
