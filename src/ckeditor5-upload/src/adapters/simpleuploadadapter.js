@@ -179,13 +179,11 @@ class Adapter {
                 return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
             }
             
-            console.log(response);
+            let jsonData = JSON.parse(response);
             
-            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('data') && response.data.data.hasOwnProperty('uuid') && response.data.data.uuid) {
-                console.log('load resolve');
+            if (jsonData.hasOwnProperty('data') && jsonData.data.hasOwnProperty('uuid') && jsonData.data.uuid) {
                 _this._setRequestLoad(resolve, reject, file, response.data.data.uuid);
             } else {
-                console.log('load reject');
                 reject(genericErrorText);
             }
         });
@@ -207,6 +205,8 @@ class Adapter {
 
         const loader = this.loader;
         const genericErrorText = `Couldn't load file: ${file.name}.`;
+        
+        const presets = this.options.presets.length ? opts.presets : [];
 
         this.xhrLoad.addEventListener('error', () => reject(genericErrorText));
         
@@ -221,8 +221,30 @@ class Adapter {
             
             console.log(response.data);
             
+            let jsonData = JSON.parse(response);
             
-            // resolve(response.url ? {default: response.url} : response.urls);
+            if (jsonData.hasOwnProperty('data') && jsonData.data.hasOwnProperty('files')) {
+                
+                let files = jsonData.data.files;
+                let urls = [];
+                
+                for (let index in files) {
+                    
+                    for (let indexPreset in presets) {
+                        let linkStr = _thisthis.getLink(files[index][presets[indexPreset]].links);
+                        urls.push(linkStr);
+                    }
+                }
+                
+                if (urls.length) {
+                    resolve(urls.length === 1 ? {default: urls[0]} : urls);
+                } else {
+                    reject(genericErrorText);
+                }
+                
+            } else {
+                reject(genericErrorText);
+            }
         });
 
         // Upload progress when it is supported.
@@ -296,12 +318,12 @@ class Adapter {
         
         const data = {};
         
-        params.files = [uuid];
-        params.fileinfo = opts.fileInfo ? opts.fileInfo : false;
-        params.presets = opts.presets.length ? opts.presets : [];
+        data.files = [uuid];
+        data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
+        data.presets = opts.presets.length ? opts.presets : [];
 
         
-        return formPost;
+        return data;
     }
     
     
@@ -327,6 +349,37 @@ class Adapter {
     _setTypeInBlob(file) {
         const dataWithUpdatedType = file.slice(0, file.size, file.type);
         return dataWithUpdatedType;
+    }
+    
+    
+    _getLink(links) {
+        let str = '';
+
+        if (!this._isEmptyObject(links)) {
+            let keys = Object.keys(links);
+
+            if (keys.length === 1) {
+                str = links['fallback'];
+            } else {
+                for (let i in links) {
+                    if (i !== 'fallback') {
+                        return links[i];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return str;
+    }
+    
+    _isEmptyObject(obj) {
+        for (let i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
