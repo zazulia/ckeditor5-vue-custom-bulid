@@ -292,7 +292,7 @@ class Adapter {
         
         const data = this._createFormLoad(uuid, this.options);
                 
-        this.xhrLoad.open('GET', this.options.loadUrl, true);
+        this.xhrLoad.open('GET', this.options.loadUrl + '?' + this._getQueryString(data), true);
                 
         // Set headers if specified.
         const headers = this.options.headers || {};
@@ -320,6 +320,26 @@ class Adapter {
 
         
         return data;
+    }
+    
+    _getQueryArray(obj, path = [], result = []) {        
+        Object.entries(obj).reduce((acc, [ k, v ]) => {
+            path.push(k);
+
+            if (v instanceof Object) {
+                getQueryArray(v, path, acc);
+            } else {
+                acc.push(`${path.map((n, i) => i ? `[${n}]` : n).join('')}=${v}`);
+            }
+
+            path.pop();
+
+            return acc;
+        }, result);
+    }
+    
+    _getQueryString(obj) {
+        return this.getQueryArray(obj).join('&');
     }
     
     
