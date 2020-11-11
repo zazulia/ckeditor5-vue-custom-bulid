@@ -159,7 +159,11 @@ class Adapter {
         this.xhrPresets = new XMLHttpRequest();
         
         
-        this._sendRequestPresets(resolve, reject, file);
+        if (this.options.presets.length) {
+            this._sendRequestPresets(resolve, reject, file);
+        } else {
+            this.callbackPromise(resolve, reject, file);
+        }
     }
     
     callbackPromise(resolve, reject, file) {
