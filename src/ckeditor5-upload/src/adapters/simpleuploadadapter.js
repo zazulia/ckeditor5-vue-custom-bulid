@@ -216,7 +216,7 @@ class Adapter {
         
         this._initListenersPresets(resolve, reject, file);
                 
-        this.xhrPresets.open('GET', this.options.presetUrl, true);
+        this.xhrPresets.open('GET', this.options.presetUrl ? this.options.presetUrl : '', true);
                 
         // Set headers if specified.
         const headers = this.options.headers || {};
@@ -390,12 +390,14 @@ class Adapter {
         this.xhrLoad.send(data);
     }
     
-    _getQueryArray(obj, path = [], result = []) {        
+    _getQueryArray(obj, path = [], result = []) {
+        let _this = this;
+        
         Object.entries(obj).reduce((acc, [ k, v ]) => {
             path.push(k);
 
             if (v instanceof Object) {
-                getQueryArray(v, path, acc);
+                _this._getQueryArray(v, path, acc);
             } else {
                 acc.push(`${path.map((n, i) => i ? `[${n}]` : n).join('')}=${v}`);
             }
