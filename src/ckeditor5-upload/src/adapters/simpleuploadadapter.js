@@ -290,7 +290,7 @@ class Adapter {
         
         this._initListenersLoad(resolve, reject, file, uuid);
         
-        const data = this._createFormLoad(file, this.options);
+        const data = this._createFormLoad(uuid, this.options);
                 
         this.xhrLoad.open('GET', this.options.loadUrl, true);
                 
