@@ -24,6 +24,7 @@ import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize.js';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle.js';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar.js';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload.js';
+import ImagePresets from './ckeditor5-image/src/imagepresets.js';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent.js';
 import IndentBlock from '@ckeditor/ckeditor5-indent/src/indentblock.js';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic.js';
@@ -78,6 +79,7 @@ Editor.builtinPlugins = [
 	ImageStyle,
 	ImageToolbar,
 	ImageUpload,
+    ImagePresets,
 	Indent,
 	IndentBlock,
 	Italic,

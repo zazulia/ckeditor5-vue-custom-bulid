@@ -161,8 +161,6 @@ class Adapter {
         this.xhrLoad = new XMLHttpRequest();
         this.xhrPresets = new XMLHttpRequest();
         
-        console.log(this.options);
-        
         if (!this.options.presets.length) {
             this._sendRequestPresets(resolve, reject, file);
         } else {
@@ -316,14 +314,23 @@ class Adapter {
                 
                 let files = response.data.files;
                 let urls = [];
+                let presetsToolbar = [];
                 
                 for (let index in files) {
                     
                     for (let indexPreset in presets) {
                         let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
                         urls.push(linkStr);
+                        presetsToolbar.push({
+                            name: presets[indexPreset],
+                            value: linkStr,
+                            icon: ''
+                        });
                     }
                 }
+
+                _this.editor.config.set('image.presetsOptions', presetsToolbar);
+                
                 
                 if (urls.length) {
                     resolve(urls.length === 1 ? {default: urls[0]} : urls);
@@ -383,8 +390,6 @@ class Adapter {
         this._initListenersLoad(resolve, reject, file, uuid);
         
         const data = this._createFormLoad(uuid, this.options);
-        
-        console.log(this.options);
                 
         this.xhrLoad.open('GET', this.options.loadUrl + '?' + this._getQueryString(data), true);
                 
