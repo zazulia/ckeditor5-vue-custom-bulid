@@ -173,16 +173,16 @@ class Adapter {
         this.xhr.addEventListener('abort', () => reject());
         
         this.xhr.addEventListener('load', () => {
-            const response = _this.xhr.response;
+            const response = JSON.parse(_this.xhr.response);
 
-            if (!response || response.error) {
-                return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
+            if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
+                return reject(_this.xhr.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
             }
+                        
+            console.log(response, typeof response);
             
-            let jsonData = JSON.parse(response);
-            
-            if (jsonData.hasOwnProperty('data') && jsonData.data.hasOwnProperty('uuid') && jsonData.data.uuid) {
-                _this._setRequestLoad(resolve, reject, file, response.data.data.uuid);
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
+                _this._setRequestLoad(resolve, reject, file, response.data.uuid);
             } else {
                 reject(genericErrorText);
             }
@@ -213,19 +213,15 @@ class Adapter {
         this.xhrLoad.addEventListener('abort', () => reject());
         
         this.xhrLoad.addEventListener('load', () => {
-            const response = _this.xhrLoad.response;
+            const response = JSON.parse(_this.xhrLoad.response);
 
-            if (!response || response.error) {
-                return reject(response && response.error && response.error.message ? response.error.message : genericErrorText);
+            if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
+                return reject(_this.xhr.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
             }
-            
-            console.log(response.data);
-            
-            let jsonData = JSON.parse(response);
-            
-            if (jsonData.hasOwnProperty('data') && jsonData.data.hasOwnProperty('files')) {
+                        
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('files')) {
                 
-                let files = jsonData.data.files;
+                let files = response.data.files;
                 let urls = [];
                 
                 for (let index in files) {
