@@ -57,6 +57,8 @@ export default class SimpleUploadAdapter extends Plugin {
      * @inheritDoc
      */
     init() {
+        let _this = this;
+        
         const options = this.editor.config.get('simpleUpload');
 
         if (!options) {
@@ -77,7 +79,7 @@ export default class SimpleUploadAdapter extends Plugin {
         }
 
         this.editor.plugins.get(FileRepository).createUploadAdapter = loader => {
-            return new Adapter(loader, options);
+            return new Adapter(loader, options, _this.editor);
         };
     }
 }
@@ -95,13 +97,14 @@ class Adapter {
      * @param {module:upload/filerepository~FileLoader} loader
      * @param {module:upload/adapters/simpleuploadadapter~SimpleUploadConfig} options
      */
-    constructor(loader, options) {
+    constructor(loader, options, editor) {
         /**
          * FileLoader instance to use during the upload.
          *
          * @member {module:upload/filerepository~FileLoader} #loader
          */
         this.loader = loader;
+        this.editor = editor;
 
         /**
          * The configuration of the adapter.
@@ -158,6 +161,7 @@ class Adapter {
         this.xhrLoad = new XMLHttpRequest();
         this.xhrPresets = new XMLHttpRequest();
         
+        console.log(this.options);
         
         if (!this.options.presets.length) {
             this._sendRequestPresets(resolve, reject, file);
@@ -190,6 +194,7 @@ class Adapter {
 
                 
                 let presets = response.data.presets;
+                let presetsArr = [];
                 
                 if (!_this.options.presets.length) {
                     
@@ -197,8 +202,11 @@ class Adapter {
                     
                     for (let index in presets) {
                         
-                        _this.options.presets.push(presets[index].id);
+                        presetsArr.push(presets[index].id);
                     }
+                    
+                    _this.options.presets = presetsArr;
+                    _this.editor.config.set('simpleUpload.presets', presetsArr);
                 }
                 
             }
