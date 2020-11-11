@@ -180,8 +180,10 @@ class Adapter {
         this.xhrPresets.addEventListener('load', () => {
             
             let response = JSON.parse(_this.xhrPresets.response);
-                        
-            if (_this.xhr.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
+                       
+                  
+            if (_this.xhrPresets.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
+
                 
                 let presets = response.data.presets;
                 
@@ -418,7 +420,7 @@ class Adapter {
         
         data.files = [uuid];
         data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
-        data.presets = opts.presets.length ? opts.presets : ['original'];
+        data.presets = opts.presets.length ? opts.presets : [];
 
         
         return data;
