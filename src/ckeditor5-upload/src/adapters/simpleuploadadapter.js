@@ -182,7 +182,7 @@ class Adapter {
             console.log(response, typeof response);
             
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
-                _this._setRequestLoad(resolve, reject, file, response.data.uuid);
+                _this._sendRequestLoad(resolve, reject, file, response.data.uuid);
             } else {
                 reject(genericErrorText);
             }
@@ -316,7 +316,7 @@ class Adapter {
         
         data.files = [uuid];
         data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
-        data.presets = opts.presets.length ? opts.presets : [];
+        data.presets = opts.presets.length ? opts.presets : ['original'];
 
         
         return data;
