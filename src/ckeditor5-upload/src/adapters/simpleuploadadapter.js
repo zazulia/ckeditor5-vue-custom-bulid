@@ -159,7 +159,7 @@ class Adapter {
         this.xhrPresets = new XMLHttpRequest();
         
         
-        if (this.options.presets.length) {
+        if (!this.options.presets.length) {
             this._sendRequestPresets(resolve, reject, file);
         } else {
             this.callbackPromise(resolve, reject, file);
@@ -375,6 +375,8 @@ class Adapter {
         this._initListenersLoad(resolve, reject, file, uuid);
         
         const data = this._createFormLoad(uuid, this.options);
+        
+        console.log(this.options);
                 
         this.xhrLoad.open('GET', this.options.loadUrl + '?' + this._getQueryString(data), true);
                 
