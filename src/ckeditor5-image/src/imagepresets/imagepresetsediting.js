@@ -47,9 +47,9 @@ export default class ImagePresetsEditing extends Plugin {
 				const figure = conversionApi.mapper.toViewElement( data.item );
 
 				if (data.attributeNewValue !== null ) {
-					viewWriter.setStyle('preset', data.attributeNewValue, figure);
+					viewWriter.setAttribute('preset', data.attributeNewValue, figure);
 				} else {
-					viewWriter.removeStyle('preset', figure);
+					viewWriter.removeAttribute('preset', figure);
 				}
 			} )
 		);
