@@ -1,12 +1,3 @@
-/**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
- */
-
-/**
- * @module image/imageupload/imageuploadediting
- */
-
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
 import Notification from '@ckeditor/ckeditor5-ui/src/notification/notification';
@@ -14,7 +5,7 @@ import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard';
 import UpcastWriter from '@ckeditor/ckeditor5-engine/src/view/upcastwriter';
 import env from '@ckeditor/ckeditor5-utils/src/env';
 
-import ImageUploadCommand from './imageuploadcommand';
+import ImageUploadExtendCommand from './imageuploadcommand';
 import { fetchLocalImage, isLocalImage, createImageTypeRegExp } from './utils';
 import { getViewImgFromWidget } from '@ckeditor/ckeditor5-image/src/image/utils';
 
@@ -23,7 +14,7 @@ import { getViewImgFromWidget } from '@ckeditor/ckeditor5-image/src/image/utils'
  *
  * @extends module:core/plugin~Plugin
  */
-export default class ImageUploadEditing extends Plugin {
+export default class ImageUploadExtendEditing extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
@@ -32,7 +23,7 @@ export default class ImageUploadEditing extends Plugin {
 	}
 
 	static get pluginName() {
-		return 'ImageUploadEditing';
+		return 'ImageUploadExtendEditing';
 	}
 
 	/**
@@ -66,12 +57,12 @@ export default class ImageUploadEditing extends Plugin {
 		});
         
         
-		//this._registerSchema();
-		//this._registerConverters();
+		this._registerSchema();
+		this._registerConverters();
         
 
 		// Register imageUpload command.
-		editor.commands.add( 'imageUpload', new ImageUploadCommand( editor ) );
+		editor.commands.add('imageUploadExtend', new ImageUploadExtendCommand( editor ));
 
 		// Register upcast converter for uploadId.
 		conversion.for( 'upcast' )
@@ -114,7 +105,7 @@ export default class ImageUploadEditing extends Plugin {
 
 					// Upload images after the selection has changed in order to ensure the command's state is refreshed.
 					editor.model.enqueueChange( 'default', () => {
-						editor.execute( 'imageUpload', { file: images } );
+						editor.execute('imageUploadExtend', { file: images});
 					} );
 				}
 			} );

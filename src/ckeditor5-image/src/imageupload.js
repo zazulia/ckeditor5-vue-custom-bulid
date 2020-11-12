@@ -8,36 +8,24 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import ImageUploadUI from './imageupload/imageuploadui';
-import ImageUploadProgress from './imageupload/imageuploadprogress';
-import ImageUploadEditing from './imageupload/imageuploadediting';
+import ImageUploadExtendUI from './imageupload/imageuploadui';
+import ImageUploadExtendProgress from './imageupload/imageuploadprogress';
+import ImageUploadExtendEditing from './imageupload/imageuploadediting';
 
-/**
- * The image upload plugin.
- *
- * For a detailed overview, check the {@glink features/image-upload/image-upload image upload feature} documentation.
- *
- * This plugin does not do anything directly, but it loads a set of specific plugins to enable image uploading:
- *
- * * {@link module:image/imageupload/imageuploadediting~ImageUploadEditing},
- * * {@link module:image/imageupload/imageuploadui~ImageUploadUI},
- * * {@link module:image/imageupload/imageuploadprogress~ImageUploadProgress}.
- *
- * @extends module:core/plugin~Plugin
- */
-export default class ImageUpload extends Plugin {
+
+export default class ImageUploadExtend extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
 	static get pluginName() {
-		return 'ImageUpload';
+		return 'ImageUploadExtend';
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [ ImageUploadEditing, ImageUploadUI, ImageUploadProgress ];
+		return [ ImageUploadExtendEditing, ImageUploadExtendUI, ImageUploadExtendProgress ];
 	}
 }
 
