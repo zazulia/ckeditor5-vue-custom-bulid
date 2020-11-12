@@ -66,8 +66,8 @@ export default class ImageUploadEditing extends Plugin {
 		});
         
         
-		this._registerSchema();
-		this._registerConverters();
+		//this._registerSchema();
+		//this._registerConverters();
         
 
 		// Register imageUpload command.
