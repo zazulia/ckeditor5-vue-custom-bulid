@@ -125,6 +125,7 @@ export default class ImagePresetsUI extends Plugin {
 		const editor = this.editor;
 		const command = editor.commands.get('imagePresets');
 		const labeledInput = this._form.labeledInput;
+		const buttonSave = this._form.saveButtonView;
 
 		if ( !this._isInBalloon ) {
 			this._balloon.add( {
@@ -132,6 +133,8 @@ export default class ImagePresetsUI extends Plugin {
 				position: getBalloonPositionData( editor )
 			} );
 		}
+        
+        buttonSave.buttonView.label = '1111111';
 
 		// Make sure that each time the panel shows up, the field remains in sync with the value of
 		// the command. If the user typed in the input, then canceled the balloon (`labeledInput#value`
