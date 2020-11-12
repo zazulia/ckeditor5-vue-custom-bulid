@@ -89,13 +89,13 @@ export default class ImagePresetsUI extends Plugin {
 		// Render the form so its #element is available for clickOutsideHandler.
 		this._form.render();
 
-		this.listenTo( this._form, 'submit', () => {
+		/*this.listenTo( this._form, 'submit', () => {
 			editor.execute('imagePresets', {
 				newValue: this._form.labeledInput.fieldView.element.value
 			} );
 
 			this._hideForm( true );
-		} );
+		} );*/
 
 		this.listenTo( this._form, 'cancel', () => {
 			this._hideForm( true );
@@ -142,7 +142,6 @@ export default class ImagePresetsUI extends Plugin {
 
 		const editor = this.editor;
 		const command = editor.commands.get('imagePresets');
-		const labeledInput = this._form.labeledInput;
 		const optionButtons = this._form.optionButtons;
 
 		if ( !this._isInBalloon ) {
@@ -159,14 +158,6 @@ export default class ImagePresetsUI extends Plugin {
             }
         }
 
-		// Make sure that each time the panel shows up, the field remains in sync with the value of
-		// the command. If the user typed in the input, then canceled the balloon (`labeledInput#value`
-		// stays unaltered) and re-opened it without changing the value of the command, they would see the
-		// old value instead of the actual value of the command.
-		// https://github.com/ckeditor/ckeditor5-image/issues/114
-		labeledInput.fieldView.value = labeledInput.fieldView.element.value = command.value || '';
-
-		this._form.labeledInput.fieldView.select();
 	}
 
 	_hideForm( focusEditable ) {
