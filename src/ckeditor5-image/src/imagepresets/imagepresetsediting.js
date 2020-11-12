@@ -36,7 +36,7 @@ export default class ImagePresetsEditing extends Plugin {
 		const editor = this.editor;
 
 		// Dedicated converter to propagate image's attribute to the img tag.
-		editor.conversion.for( 'downcast' ).add( dispatcher =>
+		editor.conversion.for('downcast').add( dispatcher =>
 			dispatcher.on( 'attribute:preset:image', ( evt, data, conversionApi ) => {
                 
 				if (!conversionApi.consumable.consume( data.item, evt.name ) ) {
