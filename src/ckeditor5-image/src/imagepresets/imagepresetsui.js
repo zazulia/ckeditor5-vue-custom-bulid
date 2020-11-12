@@ -105,7 +105,7 @@ export default class ImagePresetsUI extends Plugin {
             console.log(evt, data);
             
 			editor.execute('imagePresets', {
-				newValue: ''
+				newValue: this.getOptionPreset(evt.source.label)
 			});
 
 			this._hideForm(true);
@@ -180,6 +180,16 @@ export default class ImagePresetsUI extends Plugin {
 			this.editor.editing.view.focus();
 		}
 	}
+    
+    getOptionPreset(name) {
+        for (let i in this.presetsOptions) {
+            if (this.presetsOptions[i].name === name) {
+                return this.presetsOptions[i].value;
+            }
+        }
+        
+        return '';
+    }
 
 
 	get _isVisible() {
