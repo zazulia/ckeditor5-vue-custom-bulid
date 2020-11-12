@@ -37,9 +37,7 @@ export default class ImagePresets extends Plugin {
             
             console.log(data.item);
             
-            
             const model = this.editor.model;
-            const imageElement = model.document.selection.getSelectedElement();
             
             const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
             
@@ -52,7 +50,7 @@ export default class ImagePresets extends Plugin {
                 viewWriter.setAttribute('uuid', newValue, img);
                 
                 model.change( writer => {
-                    writer.setAttribute('uuid', newValue, imageElement);
+                    writer.setAttribute('uuid', newValue, data.item);
                 });
                 
             });
@@ -67,7 +65,7 @@ export default class ImagePresets extends Plugin {
                 
                 
                 model.change( writer => {
-                    writer.setAttribute('preset', newValue, imageElement);
+                    writer.setAttribute('preset', newValue, data.item);
                 });
             });
             
