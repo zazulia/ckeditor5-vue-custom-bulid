@@ -9,6 +9,10 @@ export default class ImagePresetsCommand extends Command {
 		this.isEnabled = isImage( element );
         
         this.value = {};
+        
+		if (isImage(element) && element.hasAttribute('uuid') ) {
+			this.value['uuid'] = element.getAttribute('uuid');
+		}
 
 		if (isImage(element) && element.hasAttribute('src') ) {
 			this.value['src'] = element.getAttribute('src');
@@ -29,13 +33,19 @@ export default class ImagePresetsCommand extends Command {
 
         if ( imageElement ) {
             model.change( writer => {
+                
                 if (options.newValue.hasOwnProperty('src')) {
                     writer.setAttribute('src', options.newValue.src, imageElement);
+                }
+                
+                if (options.newValue.hasOwnProperty('uuid')) {
+                    writer.setAttribute('uuid', options.newValue['uuid'], imageElement);
                 }
                 
                 if (options.newValue.hasOwnProperty('preset')) {
                     writer.setAttribute('preset', options.newValue['preset'], imageElement);
                 }
+                
             });
         }
 	}

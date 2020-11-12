@@ -275,6 +275,9 @@ class Adapter {
             }
             
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
+                
+                _this.pluginEntity.set('uuid', response.data.uuid);
+                
                 _this._sendRequestLoad(resolve, reject, file, response.data.uuid);
             } else {
                 reject(genericErrorText);
@@ -337,7 +340,11 @@ class Adapter {
                 
                 
                 if (urls.length) {
-                    resolve(urls.length === 1 ? {default: urls[0]} : urls);
+                    if(urls.indexOf('large') !== -1) {
+                        resolve({default: 'large'});
+                    } else {
+                        resolve({default: urls[0]});
+                    }
                 } else {
                     reject(genericErrorText);
                 }
