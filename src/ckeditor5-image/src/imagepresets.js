@@ -51,7 +51,7 @@ export default class ImagePresets extends Plugin {
         editor.conversion.for('downcast').add( dispatcher => {
             
             dispatcher.on( 'attribute:uuid:image', ( evt, data, conversionApi ) => {
-                if ( !conversionApi.consumable.consume( data.item, evt.name ) ) {
+                if (!conversionApi.consumable.consume( data.item, evt.name ) ) {
                     return;
                 }
 
@@ -59,7 +59,7 @@ export default class ImagePresets extends Plugin {
                 const figure = conversionApi.mapper.toViewElement(data.item);
                 const img = figure.getChild( 0 );
 
-                if ( data.attributeNewValue !== null ) {
+                if (data.attributeNewValue !== null ) {
                     viewWriter.setAttribute('uuid', data.attributeNewValue, img);
                 } else {
                     viewWriter.removeAttribute('uuid', img);

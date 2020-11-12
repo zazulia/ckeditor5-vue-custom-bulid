@@ -12,10 +12,6 @@ export default class ImagePresetsCommand extends Command {
         
         if (isImage(element)) {
             
-            if (element.hasAttribute('uuid') ) {
-                this.value['uuid'] = element.getAttribute('uuid');
-            }
-
             if (element.hasAttribute('src') ) {
                 this.value['src'] = element.getAttribute('src');
             } else {
@@ -42,10 +38,6 @@ export default class ImagePresetsCommand extends Command {
                 
                 if (options.newValue.hasOwnProperty('src')) {
                     writer.setAttribute('src', options.newValue.src, imageElement);
-                }
-                
-                if (options.newValue.hasOwnProperty('uuid')) {
-                    writer.setAttribute('uuid', options.newValue['uuid'], imageElement);
                 }
                 
                 if (options.newValue.hasOwnProperty('preset')) {
