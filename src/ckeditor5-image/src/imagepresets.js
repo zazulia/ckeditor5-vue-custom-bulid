@@ -33,9 +33,10 @@ export default class ImagePresets extends Plugin {
 			isFormatting: true
 		});
         
-        
-        
 		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
+            
+            console.log(data.item);
+            
             
             const model = this.editor.model;
             const imageElement = model.document.selection.getSelectedElement();
