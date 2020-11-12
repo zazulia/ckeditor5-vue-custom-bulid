@@ -44,21 +44,15 @@ export default class ImagePresetsFormView extends View {
 		 * @member {module:utils/keystrokehandler~KeystrokeHandler}
 		 */
 		this.keystrokes = new KeystrokeHandler();
+        
+        
+        this.optionButtons = [];
+        
+        for (let i = 0; i < 20; i++) {
+            this.optionButtons[i] = this._createOptionButton('', '', '', 'presetExecute');
+            this.optionButtons[i].isVisible = false;
+        }
 
-		/**
-		 * An input with a label.
-		 *
-		 * @member {module:ui/labeledfield/labeledfieldview~LabeledFieldView} #labeledInput
-		 */
-		this.labeledInput = this._createLabeledInputView();
-
-		/**
-		 * A button used to submit the form.
-		 *
-		 * @member {module:ui/button/buttonview~ButtonView} #saveButtonView
-		 */
-		this.saveButtonView = this._createButton( t( 'Save' ), checkIcon, 'ck-button-save' );
-		this.saveButtonView.type = 'submit';
 
 		/**
 		 * A button used to cancel the form.
@@ -95,8 +89,9 @@ export default class ImagePresetsFormView extends View {
 				focusNext: 'tab'
 			}
 		} );
-
-		this.setTemplate( {
+        
+        
+        let templateSettings = {
 			tag: 'form',
 
 			attributes: {
@@ -109,12 +104,17 @@ export default class ImagePresetsFormView extends View {
 				tabindex: '-1'
 			},
 
-			children: [
-				this.labeledInput,
-				this.saveButtonView,
-				this.cancelButtonView
-			]
-		} );
+			children: []
+		};
+        
+        for (let i = 0; i < 20; i++) {
+            templateSettings.children.push(this.optionButtons[i]);
+        }
+        
+        templateSettings.children.push(this.cancelButtonView);
+        
+
+		this.setTemplate(templateSettings);
 	}
 
 	/**
@@ -126,9 +126,16 @@ export default class ImagePresetsFormView extends View {
 		this.keystrokes.listenTo( this.element );
 
 		submitHandler( { view: this } );
+        
+        let arr = [];
+        
+        for (let i = 0; i < 20; i++) {
+            arr.push(this.optionButtons[i]);
+        }
+        
+        arr.push(this.cancelButtonView);
 
-		[ this.labeledInput, this.saveButtonView, this.cancelButtonView ]
-			.forEach( v => {
+		arr.forEach( v => {
 				// Register the view as focusable.
 				this._focusables.add( v );
 
@@ -164,25 +171,43 @@ export default class ImagePresetsFormView extends View {
 		} );
 
 		if ( eventName ) {
-			button.delegate( 'execute' ).to( this, eventName );
+			button.delegate('execute').to(this, eventName );
 		}
 
 		return button;
 	}
-
+    
+    
 	/**
-	 * Creates an input with a label.
+	 * Creates the button view.
 	 *
 	 * @private
-	 * @returns {module:ui/labeledfield/labeledfieldview~LabeledFieldView} Labeled field view instance.
+	 * @param {String} label The button label
+	 * @param {String} icon The button's icon.
+	 * @param {String} className The additional button CSS class name.
+	 * @param {String} [eventName] The event name that the ButtonView#execute event will be delegated to.
+	 * @returns {module:ui/button/buttonview~ButtonView} The button view instance.
 	 */
-	_createLabeledInputView() {
-		const t = this.locale.t;
-		const labeledInput = new LabeledFieldView( this.locale, createLabeledInputText );
+	_createOptionButton( label, icon, className, eventName ) {
+		const button = new ButtonView( this.locale );
 
-		labeledInput.label = t( 'Image presets' );
-		labeledInput.fieldView.placeholder = t( 'Image presets' );
+		button.set( {
+			label,
+			icon,
+			tooltip: true,
+            withText: true
+		} );
 
-		return labeledInput;
+		button.extendTemplate( {
+			attributes: {
+				class: className
+			}
+		} );
+
+		if ( eventName ) {
+			button.delegate('execute').to(this, eventName);
+		}
+
+		return button;
 	}
 }

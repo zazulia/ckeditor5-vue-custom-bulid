@@ -1,5 +1,6 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+import SimpleUploadAdapter from '../../../ckeditor5-upload/src/adapters/simpleuploadadapter.js';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
 import ImagePresetsFormView from './ui/imagepresetsformview';
@@ -14,7 +15,7 @@ export default class ImagePresetsUI extends Plugin {
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [ ContextualBalloon ];
+		return [ ContextualBalloon, SimpleUploadAdapter ];
 	}
 
 	/**
@@ -28,6 +29,7 @@ export default class ImagePresetsUI extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
+        this.presetsOptions = [];
 		this._createButton();
 		this._createForm();
 	}
@@ -68,9 +70,16 @@ export default class ImagePresetsUI extends Plugin {
 
 
 	_createForm() {
+        let _this = this;
 		const editor = this.editor;
 		const view = editor.editing.view;
 		const viewDocument = view.document;
+        
+        const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
+        
+        simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue) {
+           _this.presetsOptions = newValue;
+        });
 
 
 		this._balloon = this.editor.plugins.get('ContextualBalloon');
@@ -91,6 +100,15 @@ export default class ImagePresetsUI extends Plugin {
 		this.listenTo( this._form, 'cancel', () => {
 			this._hideForm( true );
 		} );
+        
+        this.listenTo(this._form, 'presetExecute', () => {
+			editor.execute('imagePresets', {
+				newValue: ''
+			});
+
+			this._hideForm(true);
+        } );
+        
 
 		// Close the form on Esc key press.
 		this._form.keystrokes.set( 'Esc', ( data, cancel ) => {
@@ -125,16 +143,21 @@ export default class ImagePresetsUI extends Plugin {
 		const editor = this.editor;
 		const command = editor.commands.get('imagePresets');
 		const labeledInput = this._form.labeledInput;
-		const buttonSave = this._form.saveButtonView;
+		const optionButtons = this._form.optionButtons;
 
 		if ( !this._isInBalloon ) {
 			this._balloon.add( {
 				view: this._form,
 				position: getBalloonPositionData( editor )
 			} );
-		}
+		}        
         
-        buttonSave.label = '1111111';
+        
+        for (let i in this.presetsOptions) {
+            if (i < optionButtons.length) {
+                optionButtons[i].label = this.presetsOptions[i].value;
+            }
+        }
 
 		// Make sure that each time the panel shows up, the field remains in sync with the value of
 		// the command. If the user typed in the input, then canceled the balloon (`labeledInput#value`
