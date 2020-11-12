@@ -22,9 +22,12 @@ export default class ImagePresets extends Plugin {
     init() {
         let _this = this;
         const editor = this.editor;
-		const command = editor.commands.get('imagePresets');
 
-		this.bind('isEnabled').to(command);
+		editor.model.schema.extend('image', {allowAttributes: ['uuid', 'preset']});
+        
+		editor.model.schema.setAttributeProperties('uuid', {
+			isFormatting: true
+		});
         
 		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
             
@@ -37,8 +40,15 @@ export default class ImagePresets extends Plugin {
                 const img = figure.getChild(0);
                 
                 viewWriter.setAttribute('uuid', newValue, img);
-
+            });
+            
+            simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:preset', function(evt, propName, newValue, oldValue) {
                 
+                const viewWriter = conversionApi.writer;
+                const figure = conversionApi.mapper.toViewElement(data.item);
+                const img = figure.getChild(0);
+                
+                viewWriter.setAttribute('preset', newValue, img);
             });
             
         }, {priority: 'hight'});

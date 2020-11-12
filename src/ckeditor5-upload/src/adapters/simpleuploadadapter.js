@@ -314,7 +314,7 @@ class Adapter {
             if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
                 return reject(_this.xhr.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
             }
-                        
+            
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('files')) {
                 
                 let files = response.data.files;
@@ -342,7 +342,19 @@ class Adapter {
                         }
                     }
                 }
+                
+                let currentPreset = '';
+                
+                if (urls.length) {
+                    if (presetsToolbarMap.hasOwnProperty('large')) {
+                        currentPreset = 'large';
+                    } else {
+                        currentPreset = presets[0];
+                    }
+                }
 
+                _this.pluginEntity.set('preset', currentPreset);
+                
                 _this.pluginEntity.set('presetsOptions', presetsToolbar);
                 
                 
