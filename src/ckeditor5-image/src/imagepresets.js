@@ -16,4 +16,15 @@ export default class ImagePresets extends Plugin {
 	static get pluginName() {
 		return 'ImagePresets';
 	}
+    
+    init() {
+        const editor = this.editor;
+		const command = editor.commands.get('imagePresets');
+
+		this.bind('isEnabled').to(command);
+        
+		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
+            console.log(evt, data);                        
+        }, { priority: 'hight' });
+    }
 }
