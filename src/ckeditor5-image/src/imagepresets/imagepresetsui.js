@@ -101,7 +101,9 @@ export default class ImagePresetsUI extends Plugin {
 			this._hideForm( true );
 		} );
         
-        this.listenTo(this._form, 'presetExecute', () => {
+        this.listenTo(this._form, 'presetExecute', ( evt, data ) => {
+            console.log(evt, data);
+            
 			editor.execute('imagePresets', {
 				newValue: ''
 			});
@@ -154,7 +156,8 @@ export default class ImagePresetsUI extends Plugin {
         
         for (let i in this.presetsOptions) {
             if (i < optionButtons.length) {
-                optionButtons[i].label = this.presetsOptions[i].value;
+                optionButtons[i].label = this.presetsOptions[i].name;
+                optionButtons[i].isVisible = true;
             }
         }
 

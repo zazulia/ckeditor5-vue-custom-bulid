@@ -5,7 +5,7 @@
 
 @import "@ckeditor/ckeditor5-ui/theme/mixins/_rwd.css";
 
-.ck.ck-image-presets-form {
+.ck.ck-presets-form {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
