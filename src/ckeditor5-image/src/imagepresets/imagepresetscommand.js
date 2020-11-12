@@ -10,21 +10,27 @@ export default class ImagePresetsCommand extends Command {
         
         this.value = {};
         
-		if (isImage(element) && element.hasAttribute('uuid') ) {
-			this.value['uuid'] = element.getAttribute('uuid');
-		}
+        if (isImage(element)) {
+            
+            if (element.hasAttribute('uuid') ) {
+                this.value['uuid'] = element.getAttribute('uuid');
+            }
 
-		if (isImage(element) && element.hasAttribute('src') ) {
-			this.value['src'] = element.getAttribute('src');
-		} else {
-			this.value = null;
-		}
-        
-		if (this.value && this.value.hasOwnProperty('src') && isImage(element) && element.hasAttribute('preset') ) {
-			this.value['preset'] = element.getAttribute('preset');
-		} else {
+            if (element.hasAttribute('src') ) {
+                this.value['src'] = element.getAttribute('src');
+            } else {
+                this.value = null;
+            }
+            
+            if (this.value && this.value.hasOwnProperty('src') && element.hasAttribute('preset') ) {
+                this.value['preset'] = element.getAttribute('preset');
+            } else {
+                this.value = null;
+            }
+            
+        } else {
             this.value = null;
-		}
+        }
 	}
 
 	execute(options) {
