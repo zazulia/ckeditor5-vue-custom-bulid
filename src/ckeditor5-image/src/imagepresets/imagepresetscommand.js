@@ -16,12 +16,10 @@ export default class ImagePresetsCommand extends Command {
 			this.value = null;
 		}
         
-		if (isImage(element) && element.hasAttribute('data-preset') ) {
-			this.value['data-preset'] = element.getAttribute('data-preset');
+		if (this.value && this.value.hasOwnProperty('src') && isImage(element) && element.hasAttribute('preset') ) {
+			this.value['preset'] = element.getAttribute('preset');
 		} else {
-            if (!this.value || !this.value.hasOwnProperty('src')) {
-                this.value = null;
-            }
+            this.value = null;
 		}
 	}
 
@@ -35,8 +33,8 @@ export default class ImagePresetsCommand extends Command {
                     writer.setAttribute('src', options.newValue.src, imageElement);
                 }
                 
-                if (options.newValue.hasOwnProperty('data-preset')) {
-                    writer.setAttribute('data-preset', options.newValue['data-preset'], imageElement);
+                if (options.newValue.hasOwnProperty('preset')) {
+                    writer.setAttribute('preset', options.newValue['preset'], imageElement);
                 }
             });
         }
