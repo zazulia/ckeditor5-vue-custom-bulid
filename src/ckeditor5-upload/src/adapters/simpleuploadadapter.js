@@ -335,7 +335,7 @@ class Adapter {
                             icon: ''
                         });
                         
-                        presetsToolbarMap[indexPreset] = {
+                        presetsToolbarMap[presets[indexPreset]] = {
                             name: presets[indexPreset],
                             value: linkStr,
                             icon: ''
@@ -347,6 +347,7 @@ class Adapter {
                 
                 
                 if (urls.length) {
+                    
                     if(presetsToolbarMap.hasOwnProperty('large')) {
                         resolve({default: presetsToolbarMap['large'].value});
                     } else {
