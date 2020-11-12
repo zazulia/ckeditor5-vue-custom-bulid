@@ -33,9 +33,10 @@ export default class ImagePresetsHandles extends Plugin {
             const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
             const imagePresetsButtonsPlugin = editor.plugins.get(ImagePresetsButtons);
 
-            simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue ) {
+            simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue) {
                 
-                console.log( `${ propName } Changed state: ${ oldValue } -> ${ newValue }` );
+                console.log('newValue', newValue);
+                console.log('oldValue', oldValue);
                 
                 imagePresetsButtonsPlugin.initRemote(newValue);
             });
