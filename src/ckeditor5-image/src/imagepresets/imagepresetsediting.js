@@ -19,7 +19,11 @@ export default class ImagePresetsEditing extends Plugin {
 	 */
 	_registerSchema() {
         
-		this.editor.model.schema.extend('image', {allowAttributes: 'preset' });
+		this.editor.model.schema.extend('image', {allowAttributes: ['preset', 'uuid'] });
+        
+		this.editor.model.schema.setAttributeProperties('uuid', {
+			isFormatting: true
+		});
         
 		this.editor.model.schema.setAttributeProperties('preset', {
 			isFormatting: true
@@ -59,6 +63,32 @@ export default class ImagePresetsEditing extends Plugin {
 			.attributeToAttribute( {
 				view: 'preset',
 				model: 'preset'
-			} );      
+			} );
+            
+            
+		editor.conversion.for('downcast').add( dispatcher =>
+			dispatcher.on( 'attribute:uuid:image', ( evt, data, conversionApi ) => {
+                
+				if (!conversionApi.consumable.consume( data.item, evt.name ) ) {
+					return;
+				}
+
+				const viewWriter = conversionApi.writer;
+				const figure = conversionApi.mapper.toViewElement( data.item );
+                const img = figure.getChild(0);
+
+				if (data.attributeNewValue !== null ) {
+					viewWriter.setAttribute('uuid', data.attributeNewValue, img);
+				} else {
+					viewWriter.removeAttribute('uuid', img);
+				}
+			})
+		);
+
+		editor.conversion.for( 'upcast' )
+			.attributeToAttribute( {
+				view: 'uuid',
+				model: 'uuid'
+			} ); 
 	}
 }
