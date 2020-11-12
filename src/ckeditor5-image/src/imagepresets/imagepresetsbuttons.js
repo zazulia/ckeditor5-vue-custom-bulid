@@ -47,7 +47,6 @@ export default class ImagePresetsButtons extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
-        console.log('ImagePresetsButtons');
         
 		const editor = this.editor;
 		const options = editor.config.get('image.presetsOptions');
@@ -55,11 +54,13 @@ export default class ImagePresetsButtons extends Plugin {
 
 		this.bind('isEnabled').to(command);
 
-		for (const option of options) {
-			this._registerImagePresetsButton(option);
-		}
+        if (options.length) {
+            for (const option of options) {
+                this._registerImagePresetsButton(option);
+            }
 
-		this._registerImagePresetsDropdown( options );
+            this._registerImagePresetsDropdown(options);
+        }
 	}
 
 	_registerImagePresetsButton( option ) {
@@ -101,11 +102,10 @@ export default class ImagePresetsButtons extends Plugin {
 		});
 	}
 
-
 	_registerImagePresetsDropdown( options ) {
 		const editor = this.editor;
 		const t = editor.t;
-		const originalSizeOption = options.find( option => !option.value );
+		const originalSizeOption = options.find(option => !option.value);
 
 		// Register dropdown.
 		editor.ui.componentFactory.add('imagePresets', locale => {

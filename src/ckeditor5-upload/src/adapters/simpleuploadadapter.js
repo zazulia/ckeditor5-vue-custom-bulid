@@ -204,7 +204,7 @@ class Adapter {
                     }
                     
                     _this.options.presets = presetsArr;
-                    _this.editor.config.set('simpleUpload.presets', presetsArr);
+                    _this.set('presets', presetsArr);
                 }
                 
             }
@@ -321,6 +321,7 @@ class Adapter {
                     for (let indexPreset in presets) {
                         let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
                         urls.push(linkStr);
+                        
                         presetsToolbar.push({
                             name: presets[indexPreset],
                             value: linkStr,
@@ -329,7 +330,7 @@ class Adapter {
                     }
                 }
 
-                _this.editor.config.set('image.presetsOptions', presetsToolbar);
+                _this.set('presetsOptions', presetsToolbar);
                 
                 
                 if (urls.length) {

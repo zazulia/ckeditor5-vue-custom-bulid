@@ -1,6 +1,5 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 
-
 export default class ImagePresetsHandles extends Plugin {
 	/**
 	 * @inheritDoc
@@ -26,9 +25,16 @@ export default class ImagePresetsHandles extends Plugin {
 		this.bind('isEnabled').to(command);
 
 		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
-                        
-			const widget = conversionApi.mapper.toViewElement(data.item);
+            
+            console.log('insert:image');
+            
+            const simpleUploadAdapterPlugin = editor.plugins.get('SimpleUploadAdapter');            
 
+            simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue ) {
+                
+                console.log( `${ propName } Changed state: ${ oldValue } -> ${ newValue }` );
+            });
+			
 		}, { priority: 'low' } );
 	}
 }
