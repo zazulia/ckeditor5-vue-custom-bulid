@@ -52,7 +52,7 @@ export default class ImagePresetsEditing extends Plugin {
 				} else {
 					viewWriter.removeAttribute('preset', img);
 				}
-			} )
+			})
 		);
 
 		editor.conversion.for( 'upcast' )

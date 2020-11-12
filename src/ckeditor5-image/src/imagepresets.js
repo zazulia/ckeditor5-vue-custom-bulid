@@ -24,7 +24,24 @@ export default class ImagePresets extends Plugin {
 		this.bind('isEnabled').to(command);
         
 		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
-            console.log(evt, data);                        
+
+            const selectedElement = editor.model.document.selection.getSelectedElement();
+            
+                console.log(selectedElement);
+
+			if ( isImage( selectedElement ) ) {
+                
+                console.log('selectedElement', selectedElement);
+                
+				/*editor.model.change( writer => {
+					writer.setAttribute( 'src', imageInsertView.imageURLInputValue, selectedElement );
+					writer.removeAttribute( 'srcset', selectedElement );
+					writer.removeAttribute( 'sizes', selectedElement );
+				} );*/
+			} else {
+				//editor.execute( 'imageInsert', { source: imageInsertView.imageURLInputValue } );
+			}
+            
         }, { priority: 'hight' });
     }
 }
