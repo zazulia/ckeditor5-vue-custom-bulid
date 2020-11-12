@@ -19,7 +19,7 @@ export default class ImagePresets extends Plugin {
 		return 'ImagePresets';
 	}
     
-    init() {
+    /*init() {
         let _this = this;
         const editor = this.editor;
         
@@ -34,10 +34,10 @@ export default class ImagePresets extends Plugin {
 		});
         
 		editor.editing.downcastDispatcher.on('insert:image', ( ...args ) => this.changeAfterInsert( ...args ), {priority: 'high'});
-    }
+    }*/
     
     
-    changeAfterInsert(evt, data, conversionApi) {
+    /*changeAfterInsert(evt, data, conversionApi) {
 		const editor = this.editor;
 		const modelImage = data.item;
         
@@ -67,7 +67,7 @@ export default class ImagePresets extends Plugin {
         
         
         
-        /*const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
+        const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
         
         simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:uuid', function(evt, propName, newValue, oldValue) {
             
@@ -91,8 +91,8 @@ export default class ImagePresets extends Plugin {
             model.change( writer => {
                 writer.setAttribute('preset', newValue, data.item);
             });
-        });*/
+        });
             
 
-    }
+    }*/
 }
