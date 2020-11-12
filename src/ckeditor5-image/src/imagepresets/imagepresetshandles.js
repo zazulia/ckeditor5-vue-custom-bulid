@@ -26,7 +26,7 @@ export default class ImagePresetsHandles extends Plugin {
 
 		this.bind('isEnabled').to(command);
 
-		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
+		/*editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
             
             console.log('insert:image');
             
@@ -40,6 +40,6 @@ export default class ImagePresetsHandles extends Plugin {
             });
             
 
-		}, { priority: 'low' } );
+		}, { priority: 'low' } );*/
 	}
 }

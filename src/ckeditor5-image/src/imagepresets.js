@@ -2,10 +2,11 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ImagePresetsMain from './imagepresets/imagepresetsmain';
+import SimpleUploadAdapter from '../../ckeditor5-upload/src/adapters/simpleuploadadapter.js';
 
 export default class ImagePresets extends Plugin {
 	static get requires() {
-		return [ImagePresetsMain];
+		return [ImagePresetsMain, SimpleUploadAdapter];
 	}
 	static get pluginName() {
 		return 'ImagePresets';
@@ -26,7 +27,7 @@ export default class ImagePresets extends Plugin {
 
             simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue) {
                                 
-                _this.initPresets
+                _this.initPresets();
             });
             
 
