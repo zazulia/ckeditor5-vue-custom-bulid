@@ -153,7 +153,8 @@ export default class ImagePresetsFormView extends View {
 		button.set( {
 			label,
 			icon,
-			tooltip: true
+			tooltip: true,
+            withText: true
 		} );
 
 		button.extendTemplate( {
