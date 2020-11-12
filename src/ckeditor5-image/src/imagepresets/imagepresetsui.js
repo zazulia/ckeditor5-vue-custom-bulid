@@ -134,7 +134,7 @@ export default class ImagePresetsUI extends Plugin {
 			} );
 		}
         
-        buttonSave.buttonView.label = '1111111';
+        buttonSave.label = '1111111';
 
 		// Make sure that each time the panel shows up, the field remains in sync with the value of
 		// the command. If the user typed in the input, then canceled the balloon (`labeledInput#value`
