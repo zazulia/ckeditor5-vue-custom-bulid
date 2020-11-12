@@ -275,7 +275,9 @@ class Adapter {
             }
             
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
-                                
+                
+                _this.pluginEntity.set('uuid', response.data.uuid);
+                
                 _this._sendRequestLoad(resolve, reject, file, response.data.uuid);
             } else {
                 reject(genericErrorText);
@@ -351,7 +353,6 @@ class Adapter {
                     }
                 }
 
-                _this.pluginEntity.set('uuid', response.data.uuid);
                 _this.pluginEntity.set('preset', currentPreset);
                 
                 _this.pluginEntity.set('presetsOptions', presetsToolbar);

@@ -21,7 +21,18 @@ export default class ImagePresets extends Plugin {
     
     init() {
         let _this = this;
-        const editor = this.editor; 
+        const editor = this.editor;
+        
+		this.editor.model.schema.extend('image', {allowAttributes: ['preset', 'uuid'] });
+        
+		this.editor.model.schema.setAttributeProperties('uuid', {
+			isFormatting: true
+		});
+        
+		this.editor.model.schema.setAttributeProperties('preset', {
+			isFormatting: true
+		});
+        
         
         
 		editor.editing.downcastDispatcher.on('insert:image', ( evt, data, conversionApi ) => {
