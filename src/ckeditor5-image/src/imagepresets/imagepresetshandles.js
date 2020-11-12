@@ -1,11 +1,12 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+import SimpleUploadAdapter from '../../../ckeditor5-upload/src/adapters/simpleuploadadapter.js';
 
 export default class ImagePresetsHandles extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [];
+		return [SimpleUploadAdapter];
 	}
 
 	/**
@@ -28,7 +29,7 @@ export default class ImagePresetsHandles extends Plugin {
             
             console.log('insert:image');
             
-            const simpleUploadAdapterPlugin = editor.plugins.get('SimpleUploadAdapter');            
+            const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);            
 
             simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue ) {
                 
