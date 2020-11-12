@@ -19,11 +19,11 @@ export default class ImagePresetsEditing extends Plugin {
 	 */
 	_registerSchema() {
         
-		this.editor.model.schema.extend( 'image', { allowAttributes: 'preset' } );
+		this.editor.model.schema.extend('image', {allowAttributes: 'preset' });
         
-		this.editor.model.schema.setAttributeProperties( 'preset', {
+		this.editor.model.schema.setAttributeProperties('preset', {
 			isFormatting: true
-		} );
+		});
 	}
     
     /**
@@ -45,12 +45,11 @@ export default class ImagePresetsEditing extends Plugin {
 
 				const viewWriter = conversionApi.writer;
 				const figure = conversionApi.mapper.toViewElement( data.item );
-                const img = figure.getChild(0);
 
 				if (data.attributeNewValue !== null ) {
-					viewWriter.setStyle('preset', data.attributeNewValue, img);
+					viewWriter.setStyle('preset', data.attributeNewValue, figure);
 				} else {
-					viewWriter.removeStyle('preset', img);
+					viewWriter.removeStyle('preset', figure);
 				}
 			} )
 		);
