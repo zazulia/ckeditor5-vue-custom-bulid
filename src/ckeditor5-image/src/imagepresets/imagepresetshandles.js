@@ -37,7 +37,7 @@ export default class ImagePresetsHandles extends Plugin {
                 
                 console.log( `${ propName } Changed state: ${ oldValue } -> ${ newValue }` );
                 
-                imagePresetsButtonsPlugin.init();
+                imagePresetsButtonsPlugin.initRemote(newValue);
             });
 			
 		}, { priority: 'low' } );

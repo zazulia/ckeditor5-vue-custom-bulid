@@ -47,9 +47,26 @@ export default class ImagePresetsButtons extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
+        const editor = this.editor;
+		const options = editor.config.get('image.presetsOptions');
+
+        if (options.length) {
+            
+            const command = editor.commands.get('imagePresets');
+
+            this.bind('isEnabled').to(command);
+
+            for (const option of options) {
+                this._registerImagePresetsButton(option);
+            }
+
+            this._registerImagePresetsDropdown(options);
+        }
+	}
+    
+	initRemote(options) {
         
 		const editor = this.editor;
-		const options = editor.config.get('image.presetsOptions');
 		const command = editor.commands.get('imagePresets');
 
 		this.bind('isEnabled').to(command);
