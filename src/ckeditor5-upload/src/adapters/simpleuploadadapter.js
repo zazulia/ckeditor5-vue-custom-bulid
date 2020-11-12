@@ -320,6 +320,7 @@ class Adapter {
                 let files = response.data.files;
                 let urls = [];
                 let presetsToolbar = [];
+                let presetsToolbarMap = [];
                 
                 for (let index in files) {
                     
@@ -333,6 +334,12 @@ class Adapter {
                             value: linkStr,
                             icon: ''
                         });
+                        
+                        presetsToolbarMap[indexPreset] = {
+                            name: presets[indexPreset],
+                            value: linkStr,
+                            icon: ''
+                        }
                     }
                 }
 
@@ -340,8 +347,8 @@ class Adapter {
                 
                 
                 if (urls.length) {
-                    if(urls.indexOf('large') !== -1) {
-                        resolve({default: 'large'});
+                    if(presetsToolbarMap.hasOwnProperty('large')) {
+                        resolve({default: presetsToolbarMap['large'].value});
                     } else {
                         resolve({default: urls[0]});
                     }
