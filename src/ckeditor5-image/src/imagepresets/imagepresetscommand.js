@@ -29,7 +29,6 @@ export default class ImagePresetsCommand extends Command {
 
 		if (imageElement) {
 			model.change(writer => {
-               
 				writer.setAttribute('src', options.src, imageElement);
 			});
 		}

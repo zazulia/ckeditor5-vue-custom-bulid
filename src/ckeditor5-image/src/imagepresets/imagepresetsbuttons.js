@@ -47,7 +47,7 @@ export default class ImagePresetsButtons extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
-        
+
 	}
     
 	initRemote(options) {
@@ -57,17 +57,17 @@ export default class ImagePresetsButtons extends Plugin {
 
 		this.bind('isEnabled').to(command);
 
-        if (options.length) {
-            for (const option of options) {
-                this._registerImagePresetsButton(option);
-            }
 
+        for (const option of options) {
+            this._registerImagePresetsButton(option);
+        }
+        
+        if (options.length) {
             this._registerImagePresetsDropdown(options);
         }
 	}
 
 	_registerImagePresetsButton( option ) {
-        
 
         
 		const editor = this.editor;
