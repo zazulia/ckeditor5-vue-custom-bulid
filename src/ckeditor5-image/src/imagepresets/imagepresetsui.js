@@ -102,10 +102,9 @@ export default class ImagePresetsUI extends Plugin {
 		} );
         
         this.listenTo(this._form, 'presetExecute', ( evt, data ) => {
-            console.log(evt, data);
             
 			editor.execute('imagePresets', {
-				newValue: this.getOptionPreset(evt.source.label)
+				newValue: {src: this.getOptionPreset(evt.source.label), 'data-preset': evt.source.label}
 			});
 
 			this._hideForm(true);

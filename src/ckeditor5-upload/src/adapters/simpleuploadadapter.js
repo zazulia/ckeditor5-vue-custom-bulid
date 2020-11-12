@@ -321,6 +321,7 @@ class Adapter {
                 for (let index in files) {
                     
                     for (let indexPreset in presets) {
+                        
                         let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
                         urls.push(linkStr);
                         
