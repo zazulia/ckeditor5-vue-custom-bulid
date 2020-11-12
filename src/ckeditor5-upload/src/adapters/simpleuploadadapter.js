@@ -79,7 +79,7 @@ export default class SimpleUploadAdapter extends Plugin {
         }
 
         this.editor.plugins.get(FileRepository).createUploadAdapter = loader => {
-            return new Adapter(loader, options, _this.editor);
+            return new Adapter(loader, options, _this, _this.editor);
         };
     }
 }
@@ -97,7 +97,7 @@ class Adapter {
      * @param {module:upload/filerepository~FileLoader} loader
      * @param {module:upload/adapters/simpleuploadadapter~SimpleUploadConfig} options
      */
-    constructor(loader, options, editor) {
+    constructor(loader, options, pluginEntity, editor) {
         /**
          * FileLoader instance to use during the upload.
          *
@@ -105,6 +105,7 @@ class Adapter {
          */
         this.loader = loader;
         this.editor = editor;
+        this.pluginEntity = pluginEntity;
 
         /**
          * The configuration of the adapter.
@@ -204,8 +205,9 @@ class Adapter {
                     }
                     
                     _this.options.presets = presetsArr;
-                    _this.set('presets', presetsArr);
                 }
+                
+                _this.pluginEntity.set('presets', presetsArr);
                 
             }
             
@@ -330,7 +332,7 @@ class Adapter {
                     }
                 }
 
-                _this.set('presetsOptions', presetsToolbar);
+                _this.pluginEntity.set('presetsOptions', presetsToolbar);
                 
                 
                 if (urls.length) {
