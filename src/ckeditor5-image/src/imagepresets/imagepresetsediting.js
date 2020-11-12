@@ -45,11 +45,12 @@ export default class ImagePresetsEditing extends Plugin {
 
 				const viewWriter = conversionApi.writer;
 				const figure = conversionApi.mapper.toViewElement( data.item );
+                const img = figure.getChild( 0 );
 
 				if (data.attributeNewValue !== null ) {
-					viewWriter.setAttribute('preset', data.attributeNewValue, figure);
+					viewWriter.setAttribute('preset', data.attributeNewValue, img);
 				} else {
-					viewWriter.removeAttribute('preset', figure);
+					viewWriter.removeAttribute('preset', img);
 				}
 			} )
 		);
