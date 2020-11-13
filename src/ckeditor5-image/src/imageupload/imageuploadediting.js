@@ -53,6 +53,7 @@ export default class ImageUploadEditing extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
+		const _this = this;
 		const editor = this.editor;
 		const doc = editor.model.document;
 		const schema = editor.model.schema;
@@ -184,7 +185,7 @@ export default class ImageUploadEditing extends Plugin {
 							loader.abort();
 						} else if ( loader.status == 'idle' ) {
 							// If the image was inserted into content and has not been loaded yet, start loading it.
-							this._readAndUpload( loader, image );
+							this._readAndUpload( loader, image, _this);
 						}
 					}
 				}
@@ -279,7 +280,7 @@ export default class ImageUploadEditing extends Plugin {
 	 * @param {module:engine/model/element~Element} imageElement
 	 * @returns {Promise}
 	 */
-	_readAndUpload( loader, imageElement ) {
+	_readAndUpload( loader, imageElement) {
         
 		const editor = this.editor;
 		const model = editor.model;
@@ -338,7 +339,7 @@ export default class ImageUploadEditing extends Plugin {
 			.then( data => {                
 				model.enqueueChange( 'transparent', writer => {
 					writer.setAttributes({ uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset}, imageElement );
-                    this.optionPresets = data.presetsOptions;
+                    this.optionsPresets = data.presetsOptions;
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
 				} );
 
