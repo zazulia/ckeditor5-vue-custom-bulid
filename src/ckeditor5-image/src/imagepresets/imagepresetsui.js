@@ -148,7 +148,7 @@ export default class ImagePresetsUI extends Plugin {
         
 		const element = this.editor.model.document.selection.getSelectedElement();
         
-        conole.log(element, isImage(element), element.hasAttribute('presets'), element.getAttribute('src'));
+        console.log(element, isImage(element), element.hasAttribute('presets'), element.getAttribute('src'));
         
         if (isImage(element)) {
             if (element.hasAttribute('presets') ) {
