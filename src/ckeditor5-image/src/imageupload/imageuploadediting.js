@@ -273,6 +273,7 @@ export default class ImageUploadEditing extends Plugin {
 	 * @returns {Promise}
 	 */
 	_readAndUpload( loader, imageElement ) {
+        
 		const editor = this.editor;
 		const model = editor.model;
 		const t = editor.locale.t;
