@@ -63,7 +63,7 @@ export default class ImageUploadEditing extends Plugin {
 
 		// Setup schema to allow uploadId and uploadStatus for images.
 		schema.extend( 'image', {
-			allowAttributes: [ 'uploadId', 'uploadStatus' ]
+			allowAttributes: [ 'uploadId', 'uploadStatus', 'presets']
 		} );
         
 		this._registerSchema();
@@ -81,6 +81,17 @@ export default class ImageUploadEditing extends Plugin {
 					key: 'uploadId'
 				},
 				model: 'uploadId'
+			} );
+            
+            
+		// Register upcast converter for presets.
+		conversion.for( 'upcast' )
+			.attributeToAttribute( {
+				view: {
+					name: 'img',
+					key: 'presets'
+				},
+				model: 'presets'
 			} );
 
 		// Handle pasted images.
@@ -327,7 +338,7 @@ export default class ImageUploadEditing extends Plugin {
 			} )
 			.then( data => {                
 				model.enqueueChange( 'transparent', writer => {
-					writer.setAttributes( { uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset }, imageElement );
+					writer.setAttributes( { uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset, presets: data.presetsOptions}, imageElement );
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
 				} );
 
