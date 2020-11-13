@@ -318,7 +318,7 @@ export default class ImageUploadExtendEditing extends Plugin {
 			} )
 			.then( data => {
 				model.enqueueChange( 'transparent', writer => {
-					writer.setAttributes( { uploadStatus: 'complete', src: data.src, uuid: data.uuid, preset: data.preset}, imageElement );
+					writer.setAttributes( { uploadStatus: 'complete', src: data.default}, imageElement );
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
 				} );
 
