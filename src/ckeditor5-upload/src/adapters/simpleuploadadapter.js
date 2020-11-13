@@ -334,10 +334,7 @@ class Adapter {
                 return reject(_this.xhr.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
             }
             
-            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {
-                
-                //_this.pluginEntity.set('uuid', response.data.uuid);
-                
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('uuid') && response.data.uuid) {              
                 _this._sendRequestLoad(resolve, reject, file, response.data.uuid);
             } else {
                 reject(genericErrorText);
@@ -412,10 +409,8 @@ class Adapter {
                         currentPreset = presets[0];
                     }
                 }
-
-                //_this.pluginEntity.set('preset', currentPreset);
                 
-                _this.pluginEntity.set('presetsOptions', presetsToolbar);
+                //_this.pluginEntity.set('presetsOptions', presetsToolbar);
                 
                 
                 if (urls.length) {
@@ -423,7 +418,7 @@ class Adapter {
                     if(presetsToolbarMap.hasOwnProperty('large')) {
                         resolve({default: presetsToolbarMap['large'].value, uuid: uuid, preset: currentPreset});
                     } else {
-                        resolve({default: urls[0], uuid: uuid, preset: currentPreset});
+                        resolve({default: urls[0], uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbarMap});
                     }
                 } else {
                     reject(genericErrorText);
