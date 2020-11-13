@@ -274,8 +274,6 @@ export default class ImageUploadEditing extends Plugin {
 	 */
 	_readAndUpload( loader, imageElement ) {
         
-        console.log('_readAndUpload');
-        
 		const editor = this.editor;
 		const model = editor.model;
 		const t = editor.locale.t;
@@ -327,13 +325,8 @@ export default class ImageUploadEditing extends Plugin {
 
 				return promise;
 			} )
-			.then( data => {
-                console.log('uploadStatus: complete', data);
-                
+			.then( data => {                
 				model.enqueueChange( 'transparent', writer => {
-                    console.log('uploadStatus: complete', data);
-                    
-                    
 					writer.setAttributes( { uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset }, imageElement );
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
 				} );

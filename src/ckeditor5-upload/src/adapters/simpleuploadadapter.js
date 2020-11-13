@@ -77,10 +77,70 @@ export default class SimpleUploadAdapter extends Plugin {
 
             return;
         }
+        
+        if (!options.presetUrl) {
+            this.xhrPresets = new XMLHttpRequest();
+            this._sendRequestPresets(options);
+            
+        }
+        
 
         this.editor.plugins.get(FileRepository).createUploadAdapter = loader => {
             return new Adapter(loader, options, _this, _this.editor);
         };
+    }
+    
+    _initListenersPresets(options) {
+        
+        let _this = this;
+
+        this.xhrPresets.addEventListener('error', () => _this.xhrPresets.abort());
+        
+        this.xhrPresets.addEventListener('abort', () => _this.xhrPresets.abort());
+        
+        this.xhrPresets.addEventListener('load', () => {
+            
+            let response = JSON.parse(_this.xhrPresets.response);
+                       
+                  
+            if (_this.xhrPresets.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
+
+                
+                let presets = response.data.presets;
+                let presetsArr = [];
+                                    
+                for (let index in presets) {
+                    
+                    presetsArr.push(presets[index].id);
+                }                
+                _this.set('presets', presetsArr);
+                
+            } else {
+                _this.xhrPresets.abort()
+            }
+        });
+    }
+    
+    _sendRequestPresets(options) {
+        
+        this._initListenersPresets(options);
+                
+        this.xhrPresets.open('GET', options.presetUrl ? options.presetUrl : '', true);
+                
+        // Set headers if specified.
+        const headers = options.headers || {};
+
+        // Use the withCredentials flag if specified.
+        const withCredentials = options.withCredentials || false;
+
+        Object.keys(headers).forEach((headerName) => {
+            this.xhrPresets.setRequestHeader(headerName, headers[headerName]);
+        });
+
+        this.xhrPresets.withCredentials = withCredentials;
+
+        // Send the request.
+        this.xhrPresets.send();
     }
 }
 

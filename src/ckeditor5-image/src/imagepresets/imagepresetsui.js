@@ -5,7 +5,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
 import ImagePresetsFormView from './ui/imagepresetsformview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
-import textAlternativeIcon from '@ckeditor/ckeditor5-core/theme/icons/low-vision.svg';
+import presetsIcon from '@ckeditor/ckeditor5-core/theme/icons/object-size-large.svg';
 import { repositionContextualBalloon, getBalloonPositionData } from '@ckeditor/ckeditor5-image/src/image/ui/utils';
 import { getSelectedImageWidget } from '@ckeditor/ckeditor5-image/src/image/utils.js';
 
@@ -54,7 +54,7 @@ export default class ImagePresetsUI extends Plugin {
 
 			view.set( {
 				label: t( 'Change image presets' ),
-				icon: textAlternativeIcon,
+				icon: presetsIcon,
 				tooltip: true
 			} );
 
