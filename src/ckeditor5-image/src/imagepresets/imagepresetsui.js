@@ -8,6 +8,7 @@ import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextu
 import presetsIcon from '@ckeditor/ckeditor5-core/theme/icons/object-size-large.svg';
 import { repositionContextualBalloon, getBalloonPositionData } from '@ckeditor/ckeditor5-image/src/image/ui/utils';
 import { getSelectedImageWidget } from '@ckeditor/ckeditor5-image/src/image/utils.js';
+import { isImage } from '@ckeditor/ckeditor5-image/src/image/utils';
 
 
 export default class ImagePresetsUI extends Plugin {
@@ -75,11 +76,11 @@ export default class ImagePresetsUI extends Plugin {
 		const view = editor.editing.view;
 		const viewDocument = view.document;
         
-        const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
+        /*const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
         
         simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue) {
            _this.presetsOptions = newValue;
-        });
+        });*/
 
 
 		this._balloon = this.editor.plugins.get('ContextualBalloon');
@@ -144,6 +145,21 @@ export default class ImagePresetsUI extends Plugin {
 		const editor = this.editor;
 		const command = editor.commands.get('imagePresets');
 		const optionButtons = this._form.optionButtons;
+        
+		const element = this.editor.model.document.selection.getSelectedElement();
+        
+        if (isImage(element)) {
+            if (element.hasAttribute('presets') ) {
+                let presetsOptions = element.getAttribute('src');
+                
+                for (let i in presetsOptions) {
+                    if (i < optionButtons.length) {
+                        optionButtons[i].label = presetsOptions[i].name;
+                        optionButtons[i].isVisible = true;
+                    }
+                }
+            }
+        }
 
 		if ( !this._isInBalloon ) {
 			this._balloon.add( {
@@ -153,12 +169,12 @@ export default class ImagePresetsUI extends Plugin {
 		}        
         
         
-        for (let i in this.presetsOptions) {
+        /*for (let i in this.presetsOptions) {
             if (i < optionButtons.length) {
                 optionButtons[i].label = this.presetsOptions[i].name;
                 optionButtons[i].isVisible = true;
             }
-        }
+        }*/
 
 	}
 
