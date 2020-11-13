@@ -416,7 +416,7 @@ class Adapter {
                 if (urls.length) {
                     
                     if(presetsToolbarMap.hasOwnProperty('large')) {
-                        resolve({default: presetsToolbarMap['large'].value, uuid: uuid, preset: currentPreset});
+                        resolve({default: presetsToolbarMap['large'].value, uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
                     } else {
                         resolve({default: urls[0], uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
                     }
