@@ -18,6 +18,12 @@ module.exports = {
 	performance: { hints: false },
 
 	entry: path.resolve( __dirname, 'src', 'ckeditor.js' ),
+    
+    resolve: {
+        alias: {
+            '@ckeditor': path.join(__dirname, 'src/'),
+        }
+    },
 
 	output: {
 		// The name under which the editor will be exported.
