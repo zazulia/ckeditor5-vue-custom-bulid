@@ -66,6 +66,7 @@ export default class ImageUploadEditing extends Plugin {
 			allowAttributes: [ 'uploadId', 'uploadStatus']
 		} );
         
+        this.optionsPresets = [];
 		this._registerSchema();
 		this._registerConverters();
         
@@ -195,7 +196,6 @@ export default class ImageUploadEditing extends Plugin {
 	 * @private
 	 */
 	_registerSchema() {
-        
 		this.editor.model.schema.extend('image', {allowAttributes: ['preset', 'uuid'] });
 	}
     
@@ -208,6 +208,38 @@ export default class ImageUploadEditing extends Plugin {
         
 		const editor = this.editor;
 
+            
+            
+		editor.conversion.for('downcast').add( dispatcher =>
+			dispatcher.on( 'attribute:uuid:image', ( evt, data, conversionApi ) => {
+                
+				if (!conversionApi.consumable.consume( data.item, evt.name ) ) {
+					return;
+				}
+
+				const viewWriter = conversionApi.writer;
+				const figure = conversionApi.mapper.toViewElement( data.item );
+                const img = figure.getChild(0);
+                
+                
+                
+				if (data.attributeNewValue !== null ) {
+					viewWriter.setAttribute('uuid', data.attributeNewValue, img);
+				} else {
+                    this.optionsPresets = [];
+					viewWriter.removeAttribute('uuid', img);
+				}
+                
+                viewWriter.setCustomProperty('presets', this.optionsPresets, img);
+			})
+		);
+
+		editor.conversion.for( 'upcast' )
+			.attributeToAttribute( {
+				view: 'uuid',
+				model: 'uuid'
+			} );
+            
 		// Dedicated converter to propagate image's attribute to the img tag.
 		editor.conversion.for('downcast').add( dispatcher =>
 			dispatcher.on( 'attribute:preset:image', ( evt, data, conversionApi ) => {
@@ -233,32 +265,6 @@ export default class ImageUploadEditing extends Plugin {
 				view: 'preset',
 				model: 'preset'
 			} );
-            
-            
-		editor.conversion.for('downcast').add( dispatcher =>
-			dispatcher.on( 'attribute:uuid:image', ( evt, data, conversionApi ) => {
-                
-				if (!conversionApi.consumable.consume( data.item, evt.name ) ) {
-					return;
-				}
-
-				const viewWriter = conversionApi.writer;
-				const figure = conversionApi.mapper.toViewElement( data.item );
-                const img = figure.getChild(0);
-
-				if (data.attributeNewValue !== null ) {
-					viewWriter.setAttribute('uuid', data.attributeNewValue, img);
-				} else {
-					viewWriter.removeAttribute('uuid', img);
-				}
-			})
-		);
-
-		editor.conversion.for( 'upcast' )
-			.attributeToAttribute( {
-				view: 'uuid',
-				model: 'uuid'
-			} );
 	}
 
 	/**
@@ -277,9 +283,12 @@ export default class ImageUploadEditing extends Plugin {
         
 		const editor = this.editor;
 		const model = editor.model;
+        const conversion = editor.conversion;
 		const t = editor.locale.t;
 		const fileRepository = editor.plugins.get( FileRepository );
 		const notification = editor.plugins.get( Notification );
+        
+        this.optionPresets = [];
 
 		model.enqueueChange( 'transparent', writer => {
 			writer.setAttribute( 'uploadStatus', 'reading', imageElement );
@@ -328,9 +337,9 @@ export default class ImageUploadEditing extends Plugin {
 			} )
 			.then( data => {                
 				model.enqueueChange( 'transparent', writer => {
-					writer.setAttributes( { uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset}, imageElement );
+					writer.setAttributes({ uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset}, imageElement );
+                    this.optionPresets = data.presetsOptions;
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
-                    writer.setCustomProperty('presets', data.presetsOptions, imageElement)
 				} );
 
 				clean();
