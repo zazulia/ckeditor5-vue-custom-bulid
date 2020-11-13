@@ -85,7 +85,10 @@ export default class ImagePresetsEditing extends Plugin {
             
 		editor.conversion.for( 'upcast' )
 			.attributeToAttribute( {
-				view: 'presets',
+				view: {
+					name: 'img',
+					key: 'presets'
+				},
 				model: 'presets'
 			} );
 	}
