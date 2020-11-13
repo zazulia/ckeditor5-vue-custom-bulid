@@ -78,7 +78,7 @@ export default class SimpleUploadAdapter extends Plugin {
             return;
         }
         
-        if (!options.presetUrl) {
+        if (options.presetUrl) {
             this.xhrPresets = new XMLHttpRequest();
             this._sendRequestPresets(options);
             
