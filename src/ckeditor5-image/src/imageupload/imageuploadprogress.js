@@ -11,12 +11,12 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
-import uploadingPlaceholder from '@ckeditor/ckeditor5-image/theme/icons/image_placeholder.svg';
-import { getViewImgFromWidget } from '@ckeditor/ckeditor5-image/src/image/utils';
+import uploadingPlaceholder from '../../theme/icons/image_placeholder.svg';
+import { getViewImgFromWidget } from '../image/utils';
 
-import '@ckeditor/ckeditor5-image/theme/imageuploadprogress.css';
-import '@ckeditor/ckeditor5-image/theme/imageuploadicon.css';
-import '@ckeditor/ckeditor5-image/theme/imageuploadloader.css';
+import '../../theme/imageuploadprogress.css';
+import '../../theme/imageuploadicon.css';
+import '../../theme/imageuploadloader.css';
 
 /**
  * The image upload progress plugin.

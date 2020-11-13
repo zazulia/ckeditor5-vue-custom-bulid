@@ -14,10 +14,10 @@ import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard';
 import UpcastWriter from '@ckeditor/ckeditor5-engine/src/view/upcastwriter';
 import env from '@ckeditor/ckeditor5-utils/src/env';
 
-import ImageUploadCommand from './imageuploadcommand';
-import { fetchLocalImage, isLocalImage } from './utils';
+import ImageUploadCommand from '../../src/imageupload/imageuploadcommand';
+import { fetchLocalImage, isLocalImage } from '../../src/imageupload/utils';
 import { createImageTypeRegExp } from './utils';
-import { getViewImgFromWidget } from '@ckeditor/ckeditor5-image/src/image/utils';
+import { getViewImgFromWidget } from '../image/utils';
 
 /**
  * The editing part of the image upload feature. It registers the `'imageUpload'` command.
@@ -33,7 +33,7 @@ export default class ImageUploadEditing extends Plugin {
 	}
 
 	static get pluginName() {
-		return 'ImageUploadExtendEditing';
+		return 'ImageUploadEditing';
 	}
 
 	/**

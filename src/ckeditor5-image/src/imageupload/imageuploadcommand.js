@@ -5,7 +5,7 @@
 
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
 import Command from '@ckeditor/ckeditor5-core/src/command';
-import { insertImage, isImageAllowed } from '@ckeditor/ckeditor5-image/src/image/utils';
+import { insertImage, isImageAllowed } from '../image/utils';
 
 /**
  * @module image/imageupload/imageuploadcommand
@@ -63,19 +63,22 @@ export default class ImageUploadCommand extends Command {
 
 		const fileRepository = editor.plugins.get( FileRepository );
 
-		const filesToUpload = Array.isArray( options.file ) ? options.file : [ options.file ];
+		model.change( writer => {
+			const filesToUpload = Array.isArray( options.file ) ? options.file : [ options.file ];
 
-		for ( const file of filesToUpload ) {
-			uploadImage( model, fileRepository, file );
-		}
+			for ( const file of filesToUpload ) {
+				uploadImage( writer, model, fileRepository, file );
+			}
+		} );
 	}
 }
 
 // Handles uploading single file.
 //
+// @param {module:engine/model/writer~writer} writer
 // @param {module:engine/model/model~Model} model
 // @param {File} file
-function uploadImage( model, fileRepository, file ) {
+function uploadImage( writer, model, fileRepository, file ) {
 	const loader = fileRepository.createLoader( file );
 
 	// Do not throw when upload adapter is not set. FileRepository will log an error anyway.
@@ -83,5 +86,5 @@ function uploadImage( model, fileRepository, file ) {
 		return;
 	}
 
-	insertImage( model, { uploadId: loader.id } );
+	insertImage( writer, model, { uploadId: loader.id } );
 }
