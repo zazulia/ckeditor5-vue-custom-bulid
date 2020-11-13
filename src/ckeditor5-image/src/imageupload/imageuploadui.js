@@ -22,12 +22,12 @@ import imageIcon from '@ckeditor/ckeditor5-core/theme/icons/image.svg';
  *
  * @extends module:core/plugin~Plugin
  */
-export default class ImageUploadExtendUI extends Plugin {
+export default class ImageUploadUI extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
 	static get pluginName() {
-		return 'ImageUploadExtendUI';
+		return 'ImageUploadUI';
 	}
 
 	/**
@@ -38,9 +38,9 @@ export default class ImageUploadExtendUI extends Plugin {
 		const t = editor.t;
 
 		// Setup `imageUpload` button.
-		editor.ui.componentFactory.add('imageUploadExtend', locale => {
+		editor.ui.componentFactory.add( 'imageUpload', locale => {
 			const view = new FileDialogButtonView( locale );
-			const command = editor.commands.get( 'imageUploadExtend' );
+			const command = editor.commands.get( 'imageUpload' );
 			const imageTypes = editor.config.get( 'image.upload.types' );
 			const imageTypesRegExp = createImageTypeRegExp( imageTypes );
 
@@ -61,7 +61,7 @@ export default class ImageUploadExtendUI extends Plugin {
 				const imagesToUpload = Array.from( files ).filter( file => imageTypesRegExp.test( file.type ) );
 
 				if ( imagesToUpload.length ) {
-					editor.execute( 'imageUploadExtend', { file: imagesToUpload } );
+					editor.execute( 'imageUpload', { file: imagesToUpload } );
 				}
 			} );
 
