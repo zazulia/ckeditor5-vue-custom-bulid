@@ -338,6 +338,8 @@ export default class ImageUploadEditing extends Plugin {
 			} )
 			.then( data => {                
 				model.enqueueChange( 'transparent', writer => {
+                    console.log('complete', data.presetsOptions);
+                    
                     this.optionsPresets = data.presetsOptions;
 					writer.setAttributes({ uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset}, imageElement );
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
