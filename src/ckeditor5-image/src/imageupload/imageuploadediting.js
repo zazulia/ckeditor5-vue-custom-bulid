@@ -63,7 +63,7 @@ export default class ImageUploadEditing extends Plugin {
 
 		// Setup schema to allow uploadId and uploadStatus for images.
 		schema.extend( 'image', {
-			allowAttributes: [ 'uploadId', 'uploadStatus', 'presets']
+			allowAttributes: [ 'uploadId', 'uploadStatus']
 		} );
         
 		this._registerSchema();
@@ -82,17 +82,7 @@ export default class ImageUploadEditing extends Plugin {
 				},
 				model: 'uploadId'
 			} );
-            
-            
-		// Register upcast converter for presets.
-		conversion.for( 'upcast' )
-			.attributeToAttribute( {
-				view: {
-					name: 'img',
-					key: 'presets'
-				},
-				model: 'presets'
-			} );
+
 
 		// Handle pasted images.
 		// For every image file, a new file loader is created and a placeholder image is
@@ -206,7 +196,7 @@ export default class ImageUploadEditing extends Plugin {
 	 */
 	_registerSchema() {
         
-		this.editor.model.schema.extend('image', {allowAttributes: ['preset', 'uuid'] });
+		this.editor.model.schema.extend('image', {allowAttributes: ['preset', 'uuid', 'presets'] });
 	}
     
     /**
@@ -268,6 +258,32 @@ export default class ImageUploadEditing extends Plugin {
 			.attributeToAttribute( {
 				view: 'uuid',
 				model: 'uuid'
+			} );
+            
+            
+		editor.conversion.for('downcast').add( dispatcher =>
+			dispatcher.on( 'attribute:presets:image', ( evt, data, conversionApi ) => {
+                
+				if (!conversionApi.consumable.consume( data.item, evt.name ) ) {
+					return;
+				}
+
+				const viewWriter = conversionApi.writer;
+				const figure = conversionApi.mapper.toViewElement( data.item );
+                const img = figure.getChild(0);
+
+				if (data.attributeNewValue !== null ) {
+					viewWriter.setAttribute('presets', data.attributeNewValue, img);
+				} else {
+					viewWriter.removeAttribute('presets', img);
+				}
+			})
+		);
+
+		editor.conversion.for( 'upcast' )
+			.attributeToAttribute( {
+				view: 'presets',
+				model: 'presets'
 			} ); 
 	}
 
