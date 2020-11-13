@@ -15,6 +15,6 @@ export default class ImageUpload extends Plugin {
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [ ImageUploadExtendEditing, ImageUploadExtendUI, ImageUploadProgress ];
+		return [ ImageUploadEditing, ImageUploadUI, ImageUploadProgress ];
 	}
 }
