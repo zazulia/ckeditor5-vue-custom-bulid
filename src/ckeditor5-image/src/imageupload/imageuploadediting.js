@@ -234,6 +234,7 @@ export default class ImageUploadEditing extends Plugin {
                 console.log('setCustomProperty', this.optionsPresets);
                 img['preset'] =  this.optionsPresets;
                 
+                viewWriter.setCustomProperty('presetsStr', '12', img);
                 viewWriter.setCustomProperty('presets', this.optionsPresets, img);
 			})
 		);
