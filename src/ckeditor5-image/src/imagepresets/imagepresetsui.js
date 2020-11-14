@@ -259,6 +259,8 @@ export default class ImagePresetsUI extends Plugin {
 	}
     
     callbackPromise(resolve, reject, uuid, presetsArr) {
+        console.log('callbackPromise');
+        
         if (presetsArr.length) {
             this._sendRequestLoad(resolve, reject, uuid, presetsArr);
         } else {
@@ -293,6 +295,8 @@ export default class ImagePresetsUI extends Plugin {
                         presetsArr.push(presets[index].id);
                     }
                 }
+                
+                console.log(presets, 'presetsArr', presetsArr);
                 
             }
             
