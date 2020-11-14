@@ -9,6 +9,7 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
+    width: 250px;
 
 	& .ck-labeled-field-view {
 		display: inline-block;

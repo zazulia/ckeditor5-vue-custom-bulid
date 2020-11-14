@@ -204,8 +204,11 @@ export default class ImagePresetsUI extends Plugin {
                         let viewImgUuid = ViewImg.getAttribute('uuid');
                         
                         let { presetsOptions = [], uuid = '' } = data || {};
-                        
+                                                
                         if (presetsOptions.length && uuid === viewImgUuid) {
+                            
+                            console.log('ViewImg', ViewImg, uuid, viewImgUuid, presetsOptions);
+                            
 
                             for (let i in presetsOptions) {
                                 if (i < optionButtons.length) {
@@ -253,6 +256,13 @@ export default class ImagePresetsUI extends Plugin {
         
         if (this.xhrLoad) {
             this.xhrLoad.abort();
+        }
+        
+        const optionButtons = this._form.optionButtons;
+        
+        for (let i in optionButtons) {
+            optionButtons[i].label = '';
+            optionButtons[i].isVisible = false;
         }
 
 		// Blur the input element before removing it from DOM to prevent issues in some browsers.
