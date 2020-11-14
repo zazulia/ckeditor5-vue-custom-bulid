@@ -147,11 +147,13 @@ export default class ImagePresetsUI extends Plugin {
 		const optionButtons = this._form.optionButtons;
         
 		const element = this.editor.model.document.selection.getSelectedElement();
+        const ViewElement = this.editor.editing.mapper.toViewElement(element);
         
+            console.log(element, ViewElement);
                 
         if (isImage(element)) {
             
-            console.log(element, element.getCustomProperty('presets'), element.getCustomProperty('presetsStr'));
+            console.log(element, ViewElement);
             
             
             if (element.hasAttribute('presets') ) {
@@ -210,17 +212,6 @@ export default class ImagePresetsUI extends Plugin {
         
         return '';
     }
-    
-    getImageFromSelection(modelElement) {
-        for ( const node of modelElement.getChildren() ) {
-            if ( !!node && node.is( 'element', 'image' ) ) {
-                return node;
-            }
-        }
-
-        return null;
-    }
-
 
 	get _isVisible() {
 		return this._balloon.visibleView === this._form;
