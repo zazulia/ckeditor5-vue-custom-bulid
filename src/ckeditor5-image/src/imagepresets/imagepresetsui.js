@@ -76,7 +76,7 @@ export default class ImagePresetsUI extends Plugin {
 			view.bind( 'isEnabled' ).to( command, 'isEnabled' );
 
 			this.listenTo( view, 'execute', () => {
-				this._showForm();
+				console.log(this._showForm());
 			} );
 
 			return view;
@@ -202,8 +202,7 @@ export default class ImagePresetsUI extends Plugin {
                     console.log('uuid', uuid);
                     
                     
-                    new Promise((resolve, reject) => {
-                         
+                    const promise = new Promise((resolve, reject) => {
                         _this._sendRequestPresets(resolve, reject, uuid);
                     }).then(function(data) {
                         
@@ -218,6 +217,9 @@ export default class ImagePresetsUI extends Plugin {
                             }
                         }
                         
+                    }, function() {
+                        
+                        console.log('second func');
                     }).catch((error) => {
                         console.log(error);
                     });
@@ -240,6 +242,8 @@ export default class ImagePresetsUI extends Plugin {
                 optionButtons[i].isVisible = true;
             }
         }*/
+        
+        return promise;
 
 	}
 
