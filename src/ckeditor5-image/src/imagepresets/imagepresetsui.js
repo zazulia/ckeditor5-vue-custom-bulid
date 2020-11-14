@@ -184,7 +184,7 @@ export default class ImagePresetsUI extends Plugin {
         if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
             const ViewImg = ViewFigure.getChild(0);
             
-            console.log('ViewImg', ViewImg, this.editor.editing.writer);
+            console.log('ViewImg', ViewImg, ViewImg._customProperties);
             
             if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                 let presets = ViewImg.getCustomProperty('presets');
