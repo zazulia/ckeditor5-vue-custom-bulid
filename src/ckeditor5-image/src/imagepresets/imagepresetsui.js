@@ -493,6 +493,15 @@ export default class ImagePresetsUI extends Plugin {
         return str;
     }
     
+    isEmptyObject(obj) {
+        for (let i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     getOptionPreset(presets, name) {
         for (let i in presets) {
             if (presets[i].name === name) {
