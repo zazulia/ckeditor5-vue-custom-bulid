@@ -288,12 +288,10 @@ export default class ImagePresetsUI extends Plugin {
 
                 
                 let presets = response.data.presets;
-                
-                if (presets.length) {                    
-                    for (let index in presets) {
-                        
-                        presetsArr.push(presets[index].id);
-                    }
+                                  
+                for (let index in presets) {
+                    
+                    presetsArr.push(presets[index].id);
                 }
                 
                 console.log(presets, 'presetsArr', presetsArr);
