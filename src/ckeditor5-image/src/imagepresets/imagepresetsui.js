@@ -224,9 +224,9 @@ export default class ImagePresetsUI extends Plugin {
 	}
     
     getOptionPreset(presets, name) {
-        for (let i in this.presets) {
-            if (this.presets[i].name === name) {
-                return this.presets[i].value;
+        for (let i in presets) {
+            if (presets[i].name === name) {
+                return presets[i].value;
             }
         }
         
