@@ -178,7 +178,6 @@ export default class ImagePresetsUI extends Plugin {
 		const optionButtons = this._form.optionButtons;
         
 		const element = this.editor.model.document.selection.getSelectedElement();
-        const Writer = this.editor.editing.mapper.toViewElement(element);
         const ViewFigure = this.editor.editing.mapper.toViewElement(element);
                         
         if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
@@ -202,9 +201,11 @@ export default class ImagePresetsUI extends Plugin {
                     
                     _this._sendRequestPresets(function(data) {
                         
+                        let viewImgUuid = ViewImg.getAttribute('uuid');
+                        
                         let { presetsOptions = [], uuid = '' } = data || {};
                         
-                        if (presetsOptions.length && uuid === attrUuid) {
+                        if (presetsOptions.length && uuid === viewImgUuid) {
 
                             for (let i in presetsOptions) {
                                 if (i < optionButtons.length) {
