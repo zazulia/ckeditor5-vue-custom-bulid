@@ -142,6 +142,18 @@ export default class SimpleUploadAdapter extends Plugin {
         // Send the request.
         this.xhrPresets.send();
     }
+    
+	/**
+	 * @inheritDoc
+	 */
+	destroy() {
+		super.destroy();
+        
+        if (this.xhrPresets) {
+            this.xhrPresets.abort();
+        }
+
+	}
 }
 
 /**

@@ -33,7 +33,7 @@ export default class ImagePresetsUI extends Plugin {
         this.presetsOptions = [];
         this.configSimpleUpload = this.editor.config.get('simpleUpload');
         this.xhrPresets = new XMLHttpRequest();
-        
+        this.xhrLoad = new XMLHttpRequest();
         
         
 		this._createButton();
@@ -49,6 +49,11 @@ export default class ImagePresetsUI extends Plugin {
         if (this.xhrPresets) {
             this.xhrPresets.abort();
         }
+        
+        if (this.xhrLoad) {
+            this.xhrLoad.abort();
+        }
+        
 
 		// Destroy created UI components as they are not automatically destroyed (see ckeditor5#1341).
 		this._form.destroy();
