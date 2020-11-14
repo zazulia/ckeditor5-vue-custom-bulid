@@ -8,7 +8,7 @@
 .ck.ck-presets-form {
 	display: flex;
 	flex-direction: row;
-	flex-wrap: nowrap;
+	flex-wrap: wrap;
     width: 250px;
 
 	& .ck-labeled-field-view {
