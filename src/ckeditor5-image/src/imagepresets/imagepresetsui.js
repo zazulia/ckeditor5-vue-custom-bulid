@@ -162,6 +162,8 @@ export default class ImagePresetsUI extends Plugin {
 
 
 	_showForm() {
+        let _this = this;
+        
 		if ( this._isVisible ) {
 			return;
 		}
@@ -199,7 +201,7 @@ export default class ImagePresetsUI extends Plugin {
                     new Promise(function(resolve, reject) {
                         console.log('begin _sendRequestPresets');
                         
-                        this._sendRequestPresets(resolve, reject, uuid);
+                        _this._sendRequestPresets(resolve, reject, uuid);
                     }).then(function(data) {
                         
                         console.log('answer _sendRequestPresets', data);
