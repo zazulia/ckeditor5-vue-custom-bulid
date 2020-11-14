@@ -104,9 +104,34 @@ export default class ImagePresetsUI extends Plugin {
         
         this.listenTo(this._form, 'presetExecute', ( evt, data ) => {
             
-			editor.execute('imagePresets', {
-				newValue: {src: this.getOptionPreset(evt.source.label), 'preset': evt.source.label}
-			});
+            const element = this.editor.model.document.selection.getSelectedElement();
+            const ViewFigure = this.editor.editing.mapper.toViewElement(element);
+                            
+            if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
+                const ViewImg = ViewFigure.getChild(0);
+                
+                if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
+                    let presets = ViewImg.getCustomProperty('presets');
+                                    
+                    if (presets !== undefined) {
+                        
+                        for (let i in presets) {
+                            if (i < optionButtons.length) {
+                                optionButtons[i].label = presets[i].name;
+                                optionButtons[i].isVisible = true;
+                            }
+                        }
+                        
+                        editor.execute('imagePresets', {
+                            newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
+                        });
+                        
+                    }
+                }
+            }
+            
+            
+
 
 			this._hideForm(true);
         } );
@@ -154,9 +179,7 @@ export default class ImagePresetsUI extends Plugin {
             
             if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                 let presets = ViewImg.getCustomProperty('presets');
-                
-                console.log(presets);
-                
+                                
                 if (presets !== undefined) {
                     
                     for (let i in presets) {
@@ -204,10 +227,10 @@ export default class ImagePresetsUI extends Plugin {
 		}
 	}
     
-    getOptionPreset(name) {
-        for (let i in this.presetsOptions) {
-            if (this.presetsOptions[i].name === name) {
-                return this.presetsOptions[i].value;
+    getOptionPreset(presets, name) {
+        for (let i in this.presets) {
+            if (this.presets[i].name === name) {
+                return this.presets[i].value;
             }
         }
         
