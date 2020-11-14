@@ -176,13 +176,15 @@ export default class ImagePresetsUI extends Plugin {
 		const editor = this.editor;
 		const command = editor.commands.get('imagePresets');
 		const optionButtons = this._form.optionButtons;
-        let promise = null;
         
 		const element = this.editor.model.document.selection.getSelectedElement();
+        const Writer = this.editor.editing.mapper.toViewElement(element);
         const ViewFigure = this.editor.editing.mapper.toViewElement(element);
                         
         if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
             const ViewImg = ViewFigure.getChild(0);
+            
+            console.log('ViewImg', ViewImg, this.editor.editing.writer);
             
             if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                 let presets = ViewImg.getCustomProperty('presets');
@@ -198,21 +200,22 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                if ((presets === undefined || !presets.length) && uuid !== undefined) {
-                    
-                    console.log('uuid', uuid);
-                    
+                if ((presets === undefined || !presets.length) && uuid !== undefined) {                    
                     
                     _this._sendRequestPresets(function(data) {
                         
-                        console.log('answer _sendRequestPresets', data);
-                        
                         let { presetsOptions = [] } = data || {};
                         
-                        for (let i in presetsOptions) {
-                            if (i < optionButtons.length) {
-                                optionButtons[i].label = presetsOptions[i].name;
-                                optionButtons[i].isVisible = true;
+                        if (presetsOptions.length) {
+                            
+                            // ViewImg.setCustomProperty('presets', this.optionsPresets, img);
+                            
+                            
+                            for (let i in presetsOptions) {
+                                if (i < optionButtons.length) {
+                                    optionButtons[i].label = presetsOptions[i].name;
+                                    optionButtons[i].isVisible = true;
+                                }
                             }
                         }
                         
@@ -268,7 +271,6 @@ export default class ImagePresetsUI extends Plugin {
 	}
     
     callbackPromise(resolve, reject, uuid, presetsArr) {
-        console.log('callbackPromise');
         
         if (presetsArr.length) {
             this._sendRequestLoad(resolve, reject, uuid, presetsArr);
@@ -292,9 +294,7 @@ export default class ImagePresetsUI extends Plugin {
         });
         
         this.xhrPresets.addEventListener('load', () => {
-            
-            console.log('_initListenersPresets load');
-            
+                        
             let response = JSON.parse(_this.xhrPresets.response);      
                   
             if (_this.xhrPresets.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
@@ -305,8 +305,6 @@ export default class ImagePresetsUI extends Plugin {
                     
                     presetsArr.push(presets[index].id);
                 }
-                
-                console.log(presets, 'presetsArr', presetsArr);
             }
             
             _this.callbackPromise(resolve, reject, uuid, presetsArr);
@@ -344,8 +342,6 @@ export default class ImagePresetsUI extends Plugin {
         
         this.xhrLoad.addEventListener('load', () => {
             const response = JSON.parse(_this.xhrLoad.response);
-            
-            console.log('_initListenersLoad load');
 
             if (!_this.xhrLoad.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
                 return reject();
@@ -389,22 +385,16 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                console.log('presetsOptions', presetsToolbar, urls);
-                
                 if (urls.length) {
                     
                     if(presetsToolbarMap.hasOwnProperty('large')) {
-                        console.log('resolve', resolve);
                         
                         resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
-                        
-                        console.log({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar}, resolve);
+
                     } else {
-                        console.log('resolve', resolve);
                         
                         resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
                         
-                        console.log({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar}, resolve);
                     }
                 } else {
                     reject();

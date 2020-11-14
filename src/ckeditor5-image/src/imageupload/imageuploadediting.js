@@ -223,6 +223,9 @@ export default class ImageUploadEditing extends Plugin {
                 const img = figure.getChild(0);               
                 
                 
+                console.log('viewWriter', viewWriter);
+                
+                
 				if (data.attributeNewValue !== null ) {
 					viewWriter.setAttribute('uuid', data.attributeNewValue, img);
 				} else {
