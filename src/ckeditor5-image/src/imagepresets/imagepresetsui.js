@@ -183,12 +183,10 @@ export default class ImagePresetsUI extends Plugin {
                         
         if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
             const ViewImg = ViewFigure.getChild(0);
-            
-            console.log('ViewImg', ViewImg, ViewImg._customProperties);
-            
+                        
             if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                 let presets = ViewImg.getCustomProperty('presets');
-                let uuid = ViewImg.getAttribute('uuid');
+                let attrUuid = ViewImg.getAttribute('uuid');
                                 
                 if (presets !== undefined && presets.length) {
                     
@@ -200,29 +198,28 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                if ((presets === undefined || !presets.length) && uuid !== undefined) {                    
+                if ((presets === undefined || !presets.length) && attrUuid !== undefined) {                    
                     
                     _this._sendRequestPresets(function(data) {
                         
-                        let { presetsOptions = [] } = data || {};
+                        let { presetsOptions = [], uuid = '' } = data || {};
                         
-                        if (presetsOptions.length) {
-                            
-                            // ViewImg.setCustomProperty('presets', this.optionsPresets, img);
-                            
-                            
+                        if (presetsOptions.length && uuid === attrUuid) {
+
                             for (let i in presetsOptions) {
                                 if (i < optionButtons.length) {
                                     optionButtons[i].label = presetsOptions[i].name;
                                     optionButtons[i].isVisible = true;
                                 }
                             }
+                                                        
+                            ViewImg._customProperties.set('presets', presetsOptions);
                         }
                         
                     }, function() {
                         
                         console.log('second func');
-                    }, uuid);
+                    }, attrUuid);
                 }
             }
         }
