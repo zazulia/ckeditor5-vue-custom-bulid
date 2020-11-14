@@ -32,8 +32,8 @@ export default class ImagePresetsUI extends Plugin {
 	init() {
         this.presetsOptions = [];
         this.configSimpleUpload = this.editor.config.get('simpleUpload');
-        this.xhrPresets = new XMLHttpRequest();
-        this.xhrLoad = new XMLHttpRequest();
+        this.xhrPresets = null;
+        this.xhrLoad = null;
         
         
 		this._createButton();
@@ -48,10 +48,12 @@ export default class ImagePresetsUI extends Plugin {
         
         if (this.xhrPresets) {
             this.xhrPresets.abort();
+            this.xhrLoad = null;
         }
         
         if (this.xhrLoad) {
             this.xhrLoad.abort();
+            this.xhrLoad = null;
         }
         
 
@@ -197,7 +199,10 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                if ((presets === undefined || !presets.length) && attrUuid !== undefined) {                    
+                if ((presets === undefined || !presets.length) && attrUuid !== undefined) {
+
+                    this.xhrPresets = new XMLHttpRequest();
+                    this.xhrLoad = new XMLHttpRequest();
                     
                     _this._sendRequestPresets(function(data) {
                         
@@ -252,10 +257,12 @@ export default class ImagePresetsUI extends Plugin {
         
         if (this.xhrPresets) {
             this.xhrPresets.abort();
+            this.xhrLoad = null;
         }
         
         if (this.xhrLoad) {
             this.xhrLoad.abort();
+            this.xhrLoad = null;
         }
         
         const optionButtons = this._form.optionButtons;
