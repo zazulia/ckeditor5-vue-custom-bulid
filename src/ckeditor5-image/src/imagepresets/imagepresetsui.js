@@ -190,17 +190,19 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                console.log('uuid', uuid);
                 
                 if (presets === undefined && uuid !== undefined) {
                     
+                    console.log('uuid', uuid);
                     
                     
                     new Promise(function(resolve, reject) {
+                        console.log('begin _sendRequestPresets');
+                        
                         this._sendRequestPresets(resolve, reject, uuid);
                     }).then(function(data) {
                         
-                        console.log('answr _sendRequestPresets', data);
+                        console.log('answer _sendRequestPresets', data);
                         
                         let { presetsOptions = [] } = data || {};
                         
@@ -211,8 +213,8 @@ export default class ImagePresetsUI extends Plugin {
                             }
                         }
                         
-                    }).catch(function() {
-                        
+                    }).catch((error) => {
+                      console.log(error);
                     });
                     
                 }
@@ -273,6 +275,8 @@ export default class ImagePresetsUI extends Plugin {
         this.xhrPresets.addEventListener('abort', _this.callbackPromise(resolve, reject, uuid, presetsArr));
         
         this.xhrPresets.addEventListener('load', () => {
+            
+            console.log('_initListenersPresets load');
             
             let response = JSON.parse(_this.xhrPresets.response);      
                   
