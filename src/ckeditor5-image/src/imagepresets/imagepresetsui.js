@@ -180,7 +180,7 @@ export default class ImagePresetsUI extends Plugin {
                 let presets = ViewImg.getCustomProperty('presets');
                 let uuid = ViewImg.getAttribute('uuid');
                                 
-                if (presets !== undefined) {
+                if (presets !== undefined && presets.length) {
                     
                     for (let i in presets) {
                         if (i < optionButtons.length) {
@@ -191,7 +191,7 @@ export default class ImagePresetsUI extends Plugin {
                 }
                 
                 
-                if (presets === undefined && uuid !== undefined) {
+                if ((presets === undefined || !presets.length) && uuid !== undefined) {
                     
                     console.log('uuid', uuid);
                     
