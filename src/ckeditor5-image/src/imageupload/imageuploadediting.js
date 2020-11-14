@@ -231,6 +231,9 @@ export default class ImageUploadEditing extends Plugin {
 					viewWriter.removeAttribute('uuid', img);
 				}
                 
+                console.log('setCustomProperty', this.optionsPresets);
+                img['preset'] =  this.optionsPresets;
+                
                 viewWriter.setCustomProperty('presets', this.optionsPresets, img);
 			})
 		);
@@ -337,9 +340,7 @@ export default class ImageUploadEditing extends Plugin {
 				return promise;
 			} )
 			.then( data => {                
-				model.enqueueChange( 'transparent', writer => {
-                    console.log('complete', data.presetsOptions);
-                    
+				model.enqueueChange( 'transparent', writer => {                    
                     this.optionsPresets = data.presetsOptions;
 					writer.setAttributes({ uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset}, imageElement );
 					this._parseAndSetSrcsetAttributeOnImage( data, imageElement, writer );
