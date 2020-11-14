@@ -150,7 +150,7 @@ export default class ImagePresetsUI extends Plugin {
         const ViewElement = this.editor.editing.mapper.toViewElement(element);
         const ModelElement = this.editor.editing.mapper.toModelElement(element);
         
-            console.log('_showForm', element, ViewElement, ModelElement);
+            console.log('_showForm', element, ViewElement, ViewElement.getChild(0));
                 
         if (isImage(element)) {
             
