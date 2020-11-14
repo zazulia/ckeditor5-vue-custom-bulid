@@ -115,12 +115,6 @@ export default class ImagePresetsUI extends Plugin {
                                     
                     if (presets !== undefined) {
                         
-                        for (let i in presets) {
-                            if (i < optionButtons.length) {
-                                optionButtons[i].label = presets[i].name;
-                                optionButtons[i].isVisible = true;
-                            }
-                        }
                         
                         editor.execute('imagePresets', {
                             newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}

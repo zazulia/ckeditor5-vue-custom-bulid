@@ -232,7 +232,6 @@ export default class ImageUploadEditing extends Plugin {
                                 
                 viewWriter.setCustomProperty('presets', this.optionsPresets, img);
                 
-                
 			})
 		);
 
