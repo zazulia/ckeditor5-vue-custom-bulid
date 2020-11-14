@@ -389,7 +389,7 @@ class Adapter {
                 let files = response.data.files;
                 let urls = [];
                 let presetsToolbar = [];
-                let presetsToolbarMap = [];
+                let presetsToolbarMap = {};
                 
                 for (let index in files) {
                     

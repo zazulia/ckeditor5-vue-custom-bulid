@@ -295,7 +295,6 @@ export default class ImagePresetsUI extends Plugin {
             let response = JSON.parse(_this.xhrPresets.response);      
                   
             if (_this.xhrPresets.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
-
                 
                 let presets = response.data.presets;
                                   
@@ -305,7 +304,6 @@ export default class ImagePresetsUI extends Plugin {
                 }
                 
                 console.log(presets, 'presetsArr', presetsArr);
-                
             }
             
             _this.callbackPromise(resolve, reject, uuid, presetsArr);
@@ -355,7 +353,7 @@ export default class ImagePresetsUI extends Plugin {
                 let files = response.data.files;
                 let urls = [];
                 let presetsToolbar = [];
-                let presetsToolbarMap = [];
+                let presetsToolbarMap = {};
                 
                 for (let index in files) {
                     
@@ -388,13 +386,17 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                console.log('presetsOptions', presetsToolbar);
+                console.log('presetsOptions', presetsToolbar, urls);
                 
                 if (urls.length) {
                     
                     if(presetsToolbarMap.hasOwnProperty('large')) {
+                        console.log('resolve');
+                        
                         resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
                     } else {
+                        console.log('resolve');
+                        
                         resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
                     }
                 } else {
