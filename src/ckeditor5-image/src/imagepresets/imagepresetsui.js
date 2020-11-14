@@ -287,7 +287,7 @@ export default class ImagePresetsUI extends Plugin {
                 
                 let presets = response.data.presets;
                 
-                if (!_this.options.presets.length) {                    
+                if (presets.length) {                    
                     for (let index in presets) {
                         
                         presetsArr.push(presets[index].id);
