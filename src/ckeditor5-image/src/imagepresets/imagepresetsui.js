@@ -116,6 +116,8 @@ export default class ImagePresetsUI extends Plugin {
                     if (presets !== undefined) {
                         
                         
+                        console.log('presetExecute', presets, this.getOptionPreset(presets, evt.source.label));
+                        
                         editor.execute('imagePresets', {
                             newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
                         });
