@@ -176,6 +176,7 @@ export default class ImagePresetsUI extends Plugin {
 		const editor = this.editor;
 		const command = editor.commands.get('imagePresets');
 		const optionButtons = this._form.optionButtons;
+        let promise = null;
         
 		const element = this.editor.model.document.selection.getSelectedElement();
         const ViewFigure = this.editor.editing.mapper.toViewElement(element);
@@ -202,7 +203,7 @@ export default class ImagePresetsUI extends Plugin {
                     console.log('uuid', uuid);
                     
                     
-                    const promise = new Promise((resolve, reject) => {
+                    promise = new Promise((resolve, reject) => {
                         _this._sendRequestPresets(resolve, reject, uuid);
                     }).then(function(data) {
                         
