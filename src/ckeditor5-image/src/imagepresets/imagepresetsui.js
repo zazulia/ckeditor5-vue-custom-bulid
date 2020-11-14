@@ -202,7 +202,8 @@ export default class ImagePresetsUI extends Plugin {
                     console.log('uuid', uuid);
                     
                     
-                    new Promise((resolve, reject) => {                        
+                    new Promise((resolve, reject) => {
+                         
                         _this._sendRequestPresets(resolve, reject, uuid);
                     }).then(function(data) {
                         
@@ -218,7 +219,7 @@ export default class ImagePresetsUI extends Plugin {
                         }
                         
                     }).catch((error) => {
-                      console.log(error);
+                        console.log(error);
                     });
                     
                 }
@@ -391,13 +392,17 @@ export default class ImagePresetsUI extends Plugin {
                 if (urls.length) {
                     
                     if(presetsToolbarMap.hasOwnProperty('large')) {
-                        console.log('resolve');
+                        console.log('resolve', resolve);
                         
                         resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
+                        
+                        console.log({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar}, resolve);
                     } else {
-                        console.log('resolve');
+                        console.log('resolve', resolve);
                         
                         resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
+                        
+                        console.log({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar}, resolve);
                     }
                 } else {
                     reject();
