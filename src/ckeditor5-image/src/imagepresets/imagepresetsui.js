@@ -147,23 +147,21 @@ export default class ImagePresetsUI extends Plugin {
 		const optionButtons = this._form.optionButtons;
         
 		const element = this.editor.model.document.selection.getSelectedElement();
-        const ViewElement = this.editor.editing.mapper.toViewElement(element);
-        const ModelElement = this.editor.editing.mapper.toModelElement(element);
-        
-            console.log('_showForm', element, ViewElement, ViewElement.getChild(0));
+        const ViewFigure = this.editor.editing.mapper.toViewElement(element);
+                        
+        if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
+            const ViewImg = ViewFigure.getChild(0);
+            
+            if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
+                let presets = ViewImg.getCustomProperty('presets');
                 
-        if (isImage(element)) {
-            
-            console.log(element, ViewElement);
-            
-            
-            if (element.hasAttribute('presets') ) {
-                let presetsOptions = element.getAttribute('presets');
-                
-                for (let i in presetsOptions) {
-                    if (i < optionButtons.length) {
-                        optionButtons[i].label = presetsOptions[i].name;
-                        optionButtons[i].isVisible = true;
+                if (presets !== undefined && presets.length) {
+                    
+                    for (let i in presets) {
+                        if (i < optionButtons.length) {
+                            optionButtons[i].label = presets[i].name;
+                            optionButtons[i].isVisible = true;
+                        }
                     }
                 }
             }
