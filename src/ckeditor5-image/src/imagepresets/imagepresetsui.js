@@ -197,15 +197,12 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
                 
-                
                 if ((presets === undefined || !presets.length) && uuid !== undefined) {
                     
                     console.log('uuid', uuid);
                     
                     
-                    new Promise(function(resolve, reject) {
-                        console.log('begin _sendRequestPresets');
-                        
+                    new Promise((resolve, reject) => {                        
                         _this._sendRequestPresets(resolve, reject, uuid);
                     }).then(function(data) {
                         
@@ -249,6 +246,14 @@ export default class ImagePresetsUI extends Plugin {
 		if ( !this._isInBalloon ) {
 			return;
 		}
+        
+        if (this.xhrPresets) {
+            this.xhrPresets.abort();
+        }
+        
+        if (this.xhrLoad) {
+            this.xhrLoad.abort();
+        }
 
 		// Blur the input element before removing it from DOM to prevent issues in some browsers.
 		// See https://github.com/ckeditor/ckeditor5/issues/1501.
