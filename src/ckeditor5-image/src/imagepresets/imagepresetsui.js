@@ -31,6 +31,11 @@ export default class ImagePresetsUI extends Plugin {
 	 */
 	init() {
         this.presetsOptions = [];
+        this.configSimpleUpload = this.editor.config.get('simpleUpload');
+        this.xhrPresets = new XMLHttpRequest();
+        
+        
+        
 		this._createButton();
 		this._createForm();
 	}
@@ -40,6 +45,10 @@ export default class ImagePresetsUI extends Plugin {
 	 */
 	destroy() {
 		super.destroy();
+        
+        if (this.xhrPresets) {
+            this.xhrPresets.abort();
+        }
 
 		// Destroy created UI components as they are not automatically destroyed (see ckeditor5#1341).
 		this._form.destroy();
@@ -114,10 +123,7 @@ export default class ImagePresetsUI extends Plugin {
                     let presets = ViewImg.getCustomProperty('presets');
                                     
                     if (presets !== undefined) {
-                        
-                        
-                        console.log('presetExecute', presets, this.getOptionPreset(presets, evt.source.label));
-                        
+                                                
                         editor.execute('imagePresets', {
                             newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
                         });
@@ -125,9 +131,6 @@ export default class ImagePresetsUI extends Plugin {
                     }
                 }
             }
-            
-            
-
 
 			this._hideForm(true);
         } );
@@ -175,6 +178,7 @@ export default class ImagePresetsUI extends Plugin {
             
             if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                 let presets = ViewImg.getCustomProperty('presets');
+                let uuid = ViewImg.getAttribute('uuid');
                                 
                 if (presets !== undefined) {
                     
@@ -184,6 +188,33 @@ export default class ImagePresetsUI extends Plugin {
                             optionButtons[i].isVisible = true;
                         }
                     }
+                }
+                
+                console.log('uuid', uuid);
+                
+                if (presets === undefined && uuid !== undefined) {
+                    
+                    
+                    
+                    new Promise(function(resolve, reject) {
+                        this._sendRequestPresets(resolve, reject, uuid);
+                    }).then(function(data) {
+                        
+                        console.log('answr _sendRequestPresets', data);
+                        
+                        let { presetsOptions = [] } = data || {};
+                        
+                        for (let i in presetsOptions) {
+                            if (i < optionButtons.length) {
+                                optionButtons[i].label = presetsOptions[i].name;
+                                optionButtons[i].isVisible = true;
+                            }
+                        }
+                        
+                    }).catch(function() {
+                        
+                    });
+                    
                 }
             }
         }
@@ -222,6 +253,228 @@ export default class ImagePresetsUI extends Plugin {
 			this.editor.editing.view.focus();
 		}
 	}
+    
+    callbackPromise(resolve, reject, uuid, presetsArr) {
+        if (presetsArr.length) {
+            this._sendRequestLoad(resolve, reject, uuid, presetsArr);
+        } else {
+            reject();
+        }
+    }
+    
+    
+    _initListenersPresets(resolve, reject, uuid) {
+        
+        let _this = this;
+        let presetsArr = [];
+
+        this.xhrPresets.addEventListener('error', _this.callbackPromise(resolve, reject, uuid, presetsArr));
+        
+        this.xhrPresets.addEventListener('abort', _this.callbackPromise(resolve, reject, uuid, presetsArr));
+        
+        this.xhrPresets.addEventListener('load', () => {
+            
+            let response = JSON.parse(_this.xhrPresets.response);      
+                  
+            if (_this.xhrPresets.response && response.hasOwnProperty('data') && response.data.hasOwnProperty('presets')) {
+
+                
+                let presets = response.data.presets;
+                
+                if (!_this.options.presets.length) {                    
+                    for (let index in presets) {
+                        
+                        presetsArr.push(presets[index].id);
+                    }
+                }
+                
+            }
+            
+            _this.callbackPromise(resolve, reject, uuid, presetsArr);
+        });
+    }
+    
+    _sendRequestPresets(resolve, reject, uuid) {
+        
+        this._initListenersPresets(resolve, reject, uuid);
+                
+        this.xhrPresets.open('GET', this.configSimpleUpload.presetUrl ? this.configSimpleUpload.presetUrl : '', true);
+                
+        // Set headers if specified.
+        const headers = this.configSimpleUpload.headers || {};
+
+        // Use the withCredentials flag if specified.
+        const withCredentials = this.configSimpleUpload.withCredentials || false;
+
+        Object.keys(headers).forEach((headerName) => {
+            this.xhrPresets.setRequestHeader(headerName, headers[headerName]);
+        });
+
+        this.xhrPresets.withCredentials = withCredentials;
+
+        // Send the request.
+        this.xhrPresets.send();
+    }
+    
+    _initListenersLoad(resolve, reject, uuid, presets) {
+        let _this = this;
+
+        this.xhrLoad.addEventListener('error', reject);
+        
+        this.xhrLoad.addEventListener('abort', reject);
+        
+        this.xhrLoad.addEventListener('load', () => {
+            const response = JSON.parse(_this.xhrLoad.response);
+
+            if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
+                return reject();
+            }
+            
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('files')) {
+                
+                let files = response.data.files;
+                let urls = [];
+                let presetsToolbar = [];
+                let presetsToolbarMap = [];
+                
+                for (let index in files) {
+                    
+                    for (let indexPreset in presets) {
+                        
+                        let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
+                        urls.push(linkStr);
+                        
+                        presetsToolbar.push({
+                            name: presets[indexPreset],
+                            value: linkStr,
+                            icon: ''
+                        });
+                        
+                        presetsToolbarMap[presets[indexPreset]] = {
+                            name: presets[indexPreset],
+                            value: linkStr,
+                            icon: ''
+                        }
+                    }
+                }
+                
+                let currentPreset = '';
+                
+                if (urls.length) {
+                    if (presetsToolbarMap.hasOwnProperty('large')) {
+                        currentPreset = 'large';
+                    } else {
+                        currentPreset = presets[0];
+                    }
+                }                
+                
+                if (urls.length) {
+                    
+                    if(presetsToolbarMap.hasOwnProperty('large')) {
+                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
+                    } else {
+                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
+                    }
+                } else {
+                    reject();
+                }
+                
+            } else {
+                reject();
+            }
+        });
+
+        // Upload progress when it is supported.
+        /* istanbul ignore else */
+        if (this.xhrLoad.upload) {
+            this.xhrLoad.upload.addEventListener('progress', evt => {
+                if (evt.lengthComputable) {
+                    loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;
+                }
+            });
+        }
+    }
+    
+    _sendRequestLoad(resolve, reject, uuid, presets) {
+        
+        this._initListenersLoad(resolve, reject, uuid, presets);
+        
+        const data = this._createFormLoad(uuid, this.configSimpleUpload, presets);
+                
+        this.xhrLoad.open('GET', this.configSimpleUpload.loadUrl + '?' + this._getQueryString(data), true);
+                
+        // Set headers if specified.
+        const headers = this.configSimpleUpload.headers || {};
+
+        // Use the withCredentials flag if specified.
+        const withCredentials = this.configSimpleUpload.withCredentials || false;
+
+        Object.keys(headers).forEach((headerName) => {
+            this.xhrLoad.setRequestHeader(headerName, headers[headerName]);
+        });
+
+        this.xhrLoad.withCredentials = withCredentials;
+
+        // Send the request.
+        this.xhrLoad.send(data);
+    }
+    
+    
+    _getQueryArray(obj, path = [], result = []) {
+        let _this = this;
+        
+        return Object.entries(obj).reduce((acc, [ k, v ]) => {
+            path.push(k);
+
+            if (v instanceof Object) {
+                _this._getQueryArray(v, path, acc);
+            } else {
+                acc.push(`${path.map((n, i) => i ? `[${n}]` : n).join('')}=${v}`);
+            }
+
+            path.pop();
+
+            return acc;
+        }, result);
+    }
+    
+    _getQueryString(obj) {
+        return this._getQueryArray(obj).join('&');
+    }
+    
+    _createFormLoad(uuid, opts, presets) {
+        
+        const data = {};
+        
+        data.files = [uuid];
+        data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
+        data.presets = presets.length ? presets : [];
+
+        
+        return data;
+    }
+    
+    getLink(links) {
+        let str = '';
+
+        if (!this.isEmptyObject(links)) {
+            let keys = Object.keys(links);
+
+            if (keys.length === 1) {
+                str = links['fallback'];
+            } else {
+                for (let i in links) {
+                    if (i !== 'fallback') {
+                        return links[i];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return str;
+    }
     
     getOptionPreset(presets, name) {
         for (let i in presets) {
