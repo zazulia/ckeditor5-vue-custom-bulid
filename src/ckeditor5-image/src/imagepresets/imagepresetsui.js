@@ -341,7 +341,7 @@ export default class ImagePresetsUI extends Plugin {
             
             console.log('_initListenersLoad load');
 
-            if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
+            if (!_this.xhrLoad.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
                 return reject();
             }
             

@@ -380,8 +380,8 @@ class Adapter {
         this.xhrLoad.addEventListener('load', () => {
             const response = JSON.parse(_this.xhrLoad.response);
 
-            if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
-                return reject(_this.xhr.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
+            if (!_this.xhrLoad.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
+                return reject(_this.xhrLoad.response && response.hasOwnProperty('message') && response.message ? response.message : genericErrorText);
             }
             
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('files')) {
