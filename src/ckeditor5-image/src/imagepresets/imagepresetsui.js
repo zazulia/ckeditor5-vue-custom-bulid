@@ -76,7 +76,7 @@ export default class ImagePresetsUI extends Plugin {
 			view.bind( 'isEnabled' ).to( command, 'isEnabled' );
 
 			this.listenTo( view, 'execute', () => {
-				console.log(this._showForm());
+				this._showForm();
 			} );
 
 			return view;
@@ -203,9 +203,7 @@ export default class ImagePresetsUI extends Plugin {
                     console.log('uuid', uuid);
                     
                     
-                    promise = new Promise((resolve, reject) => {
-                        _this._sendRequestPresets(resolve, reject, uuid);
-                    }).then(function(data) {
+                    _this._sendRequestPresets(function(data) {
                         
                         console.log('answer _sendRequestPresets', data);
                         
@@ -221,10 +219,7 @@ export default class ImagePresetsUI extends Plugin {
                     }, function() {
                         
                         console.log('second func');
-                    }).catch((error) => {
-                        console.log(error);
-                    });
-                    
+                    }, uuid);
                 }
             }
         }
@@ -243,8 +238,6 @@ export default class ImagePresetsUI extends Plugin {
                 optionButtons[i].isVisible = true;
             }
         }*/
-        
-        return promise;
 
 	}
 
@@ -290,9 +283,13 @@ export default class ImagePresetsUI extends Plugin {
         let _this = this;
         let presetsArr = [];
 
-        this.xhrPresets.addEventListener('error', _this.callbackPromise(resolve, reject, uuid, presetsArr));
+        this.xhrPresets.addEventListener('error', function() {
+            _this.callbackPromise(resolve, reject, uuid, presetsArr);
+        });
         
-        this.xhrPresets.addEventListener('abort', _this.callbackPromise(resolve, reject, uuid, presetsArr));
+        this.xhrPresets.addEventListener('abort', function() {
+            _this.callbackPromise(resolve, reject, uuid, presetsArr);
+        });
         
         this.xhrPresets.addEventListener('load', () => {
             
