@@ -67,7 +67,7 @@ export default class ImageUploadEditing extends Plugin {
 			allowAttributes: [ 'uploadId', 'uploadStatus']
 		} );
         
-        this.optionsPresets = [];
+        this.optionsPresets = {};
 		this._registerSchema();
 		this._registerConverters();
         
@@ -220,14 +220,13 @@ export default class ImageUploadEditing extends Plugin {
 
 				const viewWriter = conversionApi.writer;
 				const figure = conversionApi.mapper.toViewElement( data.item );
-                const img = figure.getChild(0);
-                
+                const img = figure.getChild(0);               
                 
                 
 				if (data.attributeNewValue !== null ) {
 					viewWriter.setAttribute('uuid', data.attributeNewValue, img);
 				} else {
-                    this.optionsPresets = [];
+                    this.optionsPresets = {};
 					viewWriter.removeAttribute('uuid', img);
 				}
                                 
@@ -293,7 +292,7 @@ export default class ImageUploadEditing extends Plugin {
 		const fileRepository = editor.plugins.get( FileRepository );
 		const notification = editor.plugins.get( Notification );
         
-        this.optionPresets = [];
+        this.optionsPresets = {};
 
 		model.enqueueChange( 'transparent', writer => {
 			writer.setAttribute( 'uploadStatus', 'reading', imageElement );

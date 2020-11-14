@@ -155,7 +155,7 @@ export default class ImagePresetsUI extends Plugin {
             if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                 let presets = ViewImg.getCustomProperty('presets');
                 
-                if (presets !== undefined && presets.length) {
+                if (presets !== undefined) {
                     
                     for (let i in presets) {
                         if (i < optionButtons.length) {
