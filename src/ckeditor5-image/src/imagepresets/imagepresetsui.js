@@ -331,13 +331,15 @@ export default class ImagePresetsUI extends Plugin {
         
         this.xhrLoad.addEventListener('load', () => {
             const response = JSON.parse(_this.xhrLoad.response);
+            
+            console.log('_initListenersLoad load');
 
             if (!_this.xhr.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
                 return reject();
             }
             
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('files')) {
-                
+                                
                 let files = response.data.files;
                 let urls = [];
                 let presetsToolbar = [];
@@ -372,7 +374,9 @@ export default class ImagePresetsUI extends Plugin {
                     } else {
                         currentPreset = presets[0];
                     }
-                }                
+                }
+                
+                console.log('presetsOptions', presetsToolbar);
                 
                 if (urls.length) {
                     
