@@ -67,7 +67,6 @@ export default class ImagePresetsUI extends Plugin {
 
 		editor.ui.componentFactory.add('imagePresets', locale => {
 			const command = editor.commands.get('imagePresets');
-			const imagePresetsPlugin = editor.plugins.get('imagePresets');
 			const view = new ButtonView(locale);
 
 			view.set( {
@@ -76,8 +75,8 @@ export default class ImagePresetsUI extends Plugin {
 				tooltip: true
 			} );
 
+			// view.bind('isEnabled').to(command, 'isEnabled');
 			view.bind('isEnabled').to(command, 'isEnabled', this, 'isEnabled', ( isCommandEnabled, isPluginVisible ) => isCommandEnabled && isPluginVisible);
-
 
 			this.listenTo( view, 'execute', () => {
 				this._showForm();
