@@ -208,6 +208,9 @@ export default class ClassicEditor extends Editor {
 						}
 
 						const initialData = config.initialData || getInitialData( sourceElementOrData );
+                        
+                        
+                        console.log('initialData', initialData);
 
 						return editor.data.init( initialData );
 					} )
