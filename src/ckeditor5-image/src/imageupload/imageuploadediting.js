@@ -293,8 +293,7 @@ export default class ImageUploadEditing extends Plugin {
         this.optionsPresets = [];
                 
         this.imagePresetsUIPlugin.forceDisabled('disableImagePresetsUIPlugin');
-               
-
+        
 		model.enqueueChange( 'transparent', writer => {
 			writer.setAttribute( 'uploadStatus', 'reading', imageElement );
 		} );
