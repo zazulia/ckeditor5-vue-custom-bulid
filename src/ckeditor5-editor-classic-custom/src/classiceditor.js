@@ -191,6 +191,9 @@ export default class ClassicEditor extends Editor {
 	 * @returns {Promise} A promise resolved once the editor is ready. The promise resolves with the created editor instance.
 	 */
 	static create( sourceElementOrData, config = {} ) {
+        console.log('sourceElementOrData', sourceElementOrData);
+        
+        
 		return new Promise( resolve => {
 			const editor = new this( sourceElementOrData, config );
 
