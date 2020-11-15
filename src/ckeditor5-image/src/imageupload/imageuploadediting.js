@@ -59,6 +59,8 @@ export default class ImageUploadEditing extends Plugin {
 		const schema = editor.model.schema;
 		const conversion = editor.conversion;
 		const fileRepository = editor.plugins.get( FileRepository );
+        
+        this.imagePresetsPlugin = editor.plugins.get( 'ImagePresets' );
 
 		const imageTypes = createImageTypeRegExp( editor.config.get( 'image.upload.types' ) );
 
@@ -220,11 +222,7 @@ export default class ImageUploadEditing extends Plugin {
 
 				const viewWriter = conversionApi.writer;
 				const figure = conversionApi.mapper.toViewElement( data.item );
-                const img = figure.getChild(0);               
-                
-                
-                console.log('viewWriter', viewWriter);
-                
+                const img = figure.getChild(0);                
                 
 				if (data.attributeNewValue !== null ) {
 					viewWriter.setAttribute('uuid', data.attributeNewValue, img);
@@ -293,9 +291,9 @@ export default class ImageUploadEditing extends Plugin {
 		const notification = editor.plugins.get( Notification );
         
         this.optionsPresets = [];
+                
+        this.imagePresetsPlugin.isEnabled = false;
         
-        
-        editor.plugins.get('TextTransformation').isEnabled = false;
 
 		model.enqueueChange( 'transparent', writer => {
 			writer.setAttribute( 'uploadStatus', 'reading', imageElement );
@@ -342,7 +340,9 @@ export default class ImageUploadEditing extends Plugin {
 
 				return promise;
 			} )
-			.then( data => {                
+			.then( data => {
+                this.imagePresetsPlugin.isEnabled = true;
+                
 				model.enqueueChange( 'transparent', writer => {                    
                     this.optionsPresets = data.presetsOptions;
 					writer.setAttributes({ uploadStatus: 'complete', src: data.default, uuid: data.uuid, preset: data.preset}, imageElement );
@@ -352,6 +352,8 @@ export default class ImageUploadEditing extends Plugin {
 				clean();
 			} )
 			.catch( error => {
+                this.imagePresetsPlugin.isEnabled = true;
+                
 				// If status is not 'error' nor 'aborted' - throw error because it means that something else went wrong,
 				// it might be generic error and it would be real pain to find what is going on.
 				if ( loader.status !== 'error' && loader.status !== 'aborted' ) {
