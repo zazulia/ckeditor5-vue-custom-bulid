@@ -60,7 +60,7 @@ export default class ImageUploadEditing extends Plugin {
 		const conversion = editor.conversion;
 		const fileRepository = editor.plugins.get( FileRepository );
         
-        this.imagePresetsPlugin = editor.plugins.get( 'ImagePresets' );
+        this.imagePresetsUIPlugin = editor.plugins.get('ImagePresetsUI');
 
 		const imageTypes = createImageTypeRegExp( editor.config.get( 'image.upload.types' ) );
 
@@ -292,7 +292,9 @@ export default class ImageUploadEditing extends Plugin {
         
         this.optionsPresets = [];
                 
-        this.imagePresetsPlugin.isEnabled = false;
+        this.imagePresetsUIPlugin.isEnabled = false;
+        
+        console.log('imagePresetsUIPlugin', this.imagePresetsUIPlugin, this.imagePresetsUIPlugin.isEnabled);
         
 
 		model.enqueueChange( 'transparent', writer => {
@@ -341,7 +343,7 @@ export default class ImageUploadEditing extends Plugin {
 				return promise;
 			} )
 			.then( data => {
-                this.imagePresetsPlugin.isEnabled = true;
+                this.imagePresetsUIPlugin.isEnabled = true;
                 
 				model.enqueueChange( 'transparent', writer => {                    
                     this.optionsPresets = data.presetsOptions;
@@ -352,7 +354,7 @@ export default class ImageUploadEditing extends Plugin {
 				clean();
 			} )
 			.catch( error => {
-                this.imagePresetsPlugin.isEnabled = true;
+                this.imagePresetsUIPlugin.isEnabled = true;
                 
 				// If status is not 'error' nor 'aborted' - throw error because it means that something else went wrong,
 				// it might be generic error and it would be real pain to find what is going on.
