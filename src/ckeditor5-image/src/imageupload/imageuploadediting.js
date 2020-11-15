@@ -292,10 +292,8 @@ export default class ImageUploadEditing extends Plugin {
         
         this.optionsPresets = [];
                 
-        this.imagePresetsUIPlugin.isEnabled = false;
-        
-        console.log('imagePresetsUIPlugin', this.imagePresetsUIPlugin, this.imagePresetsUIPlugin.isEnabled);
-        
+        this.imagePresetsUIPlugin.forceDisabled('disableImagePresetsUIPlugin');
+               
 
 		model.enqueueChange( 'transparent', writer => {
 			writer.setAttribute( 'uploadStatus', 'reading', imageElement );
@@ -343,7 +341,7 @@ export default class ImageUploadEditing extends Plugin {
 				return promise;
 			} )
 			.then( data => {
-                this.imagePresetsUIPlugin.isEnabled = true;
+                this.imagePresetsUIPlugin.clearForceDisabled('disableImagePresetsUIPlugin');
                 
 				model.enqueueChange( 'transparent', writer => {                    
                     this.optionsPresets = data.presetsOptions;
@@ -354,7 +352,7 @@ export default class ImageUploadEditing extends Plugin {
 				clean();
 			} )
 			.catch( error => {
-                this.imagePresetsUIPlugin.isEnabled = true;
+                this.imagePresetsUIPlugin.clearForceDisabled('disableImagePresetsUIPlugin');
                 
 				// If status is not 'error' nor 'aborted' - throw error because it means that something else went wrong,
 				// it might be generic error and it would be real pain to find what is going on.

@@ -67,7 +67,8 @@ export default class ImagePresetsUI extends Plugin {
 
 		editor.ui.componentFactory.add('imagePresets', locale => {
 			const command = editor.commands.get('imagePresets');
-			const view = new ButtonView( locale );
+			const commandUpload = editor.commands.get('imageUpload');
+			const view = new ButtonView(locale);
 
 			view.set( {
 				label: t( 'Change image presets' ),
@@ -75,7 +76,8 @@ export default class ImagePresetsUI extends Plugin {
 				tooltip: true
 			} );
 
-			view.bind( 'isEnabled' ).to( command, 'isEnabled' );
+			view.bind('isEnabled').to(command, 'isEnabled');
+			view.bind('isEnabled').to(commandUpload, 'isEnabled', value => !value);
 
 			this.listenTo( view, 'execute', () => {
 				this._showForm();
