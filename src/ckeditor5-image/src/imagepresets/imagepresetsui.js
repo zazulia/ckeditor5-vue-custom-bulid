@@ -76,11 +76,8 @@ export default class ImagePresetsUI extends Plugin {
 				tooltip: true
 			} );
 
-			/*view.bind('isEnabled').to(command, 'isEnabled');
-			view.bind('isEnabled').to(commandUpload, 'isEnabled', value => !value);*/
-            
-            
-            view.bind('isEnabled').toMany([command, imagePresetsPlugin], 'isEnabled', (isEnabled, isEnabledImagePresets) => isEnabled && !isEnabledImagePresets);
+			view.bind('isEnabled').to(command, 'isEnabled', this, 'isEnabled', ( isCommandEnabled, isPluginVisible ) => isCommandEnabled && isPluginVisible);
+
 
 			this.listenTo( view, 'execute', () => {
 				this._showForm();
