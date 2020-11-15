@@ -30,7 +30,7 @@ export default class ImageUpload extends Plugin {
 	 * @inheritDoc
 	 */
 	static get pluginName() {
-		return 'ImageUploadExtend';
+		return 'ImageUpload';
 	}
 
 	/**
