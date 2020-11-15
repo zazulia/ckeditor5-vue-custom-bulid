@@ -7,6 +7,10 @@
 	padding: var(--ck-spacing-large);
 }
 
+.ck.ck-image-insert__panel .ck-form__row {
+    padding: 0 !important;
+}
+
 .ck.ck-image-insert__ck-finder-button {
 	display: block;
 	width: 100%;

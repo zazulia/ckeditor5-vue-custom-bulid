@@ -166,7 +166,6 @@ export default class TableCellPropertiesView extends View {
 		this.options = options;
 
 		const { borderStyleDropdown, borderWidthInput, borderColorInput, borderRowLabel } = this._createBorderFields();
-		const { backgroundRowLabel, backgroundInput } = this._createBackgroundFields();
 		const { widthInput, operatorLabel, heightInput, dimensionsLabel } = this._createDimensionFields();
 		const { horizontalAlignmentToolbar, verticalAlignmentToolbar, alignmentLabel } = this._createAlignmentFields();
 
@@ -224,7 +223,7 @@ export default class TableCellPropertiesView extends View {
 		 * @readonly
 		 * @member {module:table/ui/colorinputview~ColorInputView}
 		 */
-		this.backgroundInput = backgroundInput;
+		this.backgroundInput = this._createBackgroundField();
 
 		/**
 		 * An input that allows specifying the table cell padding.
@@ -333,12 +332,9 @@ export default class TableCellPropertiesView extends View {
 
 		// Background.
 		this.children.add( new FormRowView( locale, {
-			labelView: backgroundRowLabel,
 			children: [
-				backgroundRowLabel,
-				backgroundInput
-			],
-			class: 'ck-table-form__background-row'
+				this.backgroundInput
+			]
 		} ) );
 
 		// Dimensions row and padding.
@@ -490,8 +486,6 @@ export default class TableCellPropertiesView extends View {
 			this.borderStyle = evt.source._borderStyleValue;
 		} );
 
-		borderStyleDropdown.bind( 'isEmpty' ).to( this, 'borderStyle', value => !value );
-
 		addListToDropdown( borderStyleDropdown.fieldView, getBorderStyleDefinitions( this ) );
 
 		// -- Width ---------------------------------------------------
@@ -548,19 +542,11 @@ export default class TableCellPropertiesView extends View {
 	 * * {@link #backgroundInput}.
 	 *
 	 * @private
-	 * @returns {Object.<String,module:ui/view~View>}
+	 * @returns {module:ui/labeledfield/labeledfieldview~LabeledFieldView}
 	 */
-	_createBackgroundFields() {
+	_createBackgroundField() {
 		const locale = this.locale;
 		const t = this.t;
-
-		// -- Group label ---------------------------------------------
-
-		const backgroundRowLabel = new LabelView( locale );
-		backgroundRowLabel.text = t( 'Background' );
-
-		// -- Background color input -----------------------------------
-
 		const colorInputCreator = getLabeledColorInputCreator( {
 			colorConfig: this.options.backgroundColors,
 			columns: 5
@@ -569,7 +555,7 @@ export default class TableCellPropertiesView extends View {
 		const backgroundInput = new LabeledFieldView( locale, colorInputCreator );
 
 		backgroundInput.set( {
-			label: t( 'Color' ),
+			label: t( 'Background' ),
 			class: 'ck-table-cell-properties-form__background'
 		} );
 
@@ -578,10 +564,7 @@ export default class TableCellPropertiesView extends View {
 			this.backgroundColor = backgroundInput.fieldView.value;
 		} );
 
-		return {
-			backgroundRowLabel,
-			backgroundInput
-		};
+		return backgroundInput;
 	}
 
 	/**

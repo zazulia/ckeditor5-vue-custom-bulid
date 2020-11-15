@@ -8,17 +8,13 @@
 
 	& .ck-form__row {
 		&.ck-table-cell-properties-form__padding-row {
-			align-self: flex-end;
 			padding: 0;
-			width: 25%;
+			width: 35%;
 		}
 
 		&.ck-table-cell-properties-form__alignment-row {
 			& .ck.ck-toolbar {
 				background: none;
-
-				/* Compensate for missing input label that would push the margin (toolbar has no inputs). */
-				margin-top: var(--ck-spacing-standard);
 			}
 		}
 	}

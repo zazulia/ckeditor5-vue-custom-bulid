@@ -74,27 +74,6 @@ export default class ColorInputView extends View {
 		this.set( 'hasError', false );
 
 		/**
-		 * An observable flag set to `true` when the input is focused by the user.
-		 * `false` otherwise.
-		 *
-		 * @readonly
-		 * @observable
-		 * @member {Boolean} #isFocused
-		 * @default false
-		 */
-		this.set( 'isFocused', false );
-
-		/**
-		 * An observable flag set to `true` when the input contains no text.
-		 *
-		 * @readonly
-		 * @observable
-		 * @member {Boolean} #isEmpty
-		 * @default true
-		 */
-		this.set( 'isEmpty', true );
-
-		/**
 		 * The `id` of the element describing this field. When the field has
 		 * some error, it helps screen readers read the error text.
 		 *
@@ -149,8 +128,8 @@ export default class ColorInputView extends View {
 				'aria-describedby': bind.to( 'ariaDescribedById' )
 			},
 			children: [
-				this._dropdownView,
-				this._inputView
+				this._inputView,
+				this._dropdownView
 			]
 		} );
 
@@ -235,8 +214,8 @@ export default class ColorInputView extends View {
 		} );
 
 		inputView.value = this.value;
-		inputView.bind( 'isReadOnly', 'hasError' ).to( this );
-		this.bind( 'isFocused', 'isEmpty' ).to( inputView );
+		inputView.bind( 'isReadOnly' ).to( this );
+		inputView.bind( 'hasError' ).to( this );
 
 		inputView.on( 'input', () => {
 			const inputValue = inputView.element.value;

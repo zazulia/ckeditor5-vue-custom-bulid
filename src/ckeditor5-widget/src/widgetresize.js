@@ -41,10 +41,11 @@ export default class WidgetResize extends Plugin {
 		/**
 		 * The currently visible resizer.
 		 *
+		 * @protected
 		 * @observable
-		 * @member {module:widget/widgetresize/resizer~Resizer|null} #visibleResizer
+		 * @member {module:widget/widgetresize/resizer~Resizer|null} #_visibleResizer
 		 */
-		this.set( 'visibleResizer', null );
+		this.set( '_visibleResizer', null );
 
 		/**
 		 * References an active resizer.
@@ -81,8 +82,8 @@ export default class WidgetResize extends Plugin {
 		this._observer.listenTo( domDocument, 'mouseup', this._mouseUpListener.bind( this ) );
 
 		const redrawFocusedResizer = () => {
-			if ( this.visibleResizer ) {
-				this.visibleResizer.redraw();
+			if ( this._visibleResizer ) {
+				this._visibleResizer.redraw();
 			}
 		};
 
@@ -90,7 +91,7 @@ export default class WidgetResize extends Plugin {
 
 		// Redraws occurring upon a change of visible resizer must not be throttled, as it is crucial for the initial
 		// render. Without it the resizer frame would be misaligned with resizing host for a fraction of second.
-		this.on( 'change:visibleResizer', redrawFocusedResizer );
+		this.on( 'change:_visibleResizer', redrawFocusedResizer );
 
 		// Redrawing on any change of the UI of the editor (including content changes).
 		this.editor.ui.on( 'update', redrawFocusedResizerThrottled );
@@ -103,7 +104,7 @@ export default class WidgetResize extends Plugin {
 		viewSelection.on( 'change', () => {
 			const selectedElement = viewSelection.getSelectedElement();
 
-			this.visibleResizer = this.getResizerByViewElement( selectedElement ) || null;
+			this._visibleResizer = this._getResizerByViewElement( selectedElement ) || null;
 		} );
 	}
 
@@ -148,26 +149,7 @@ export default class WidgetResize extends Plugin {
 
 		this._resizers.set( options.viewElement, resizer );
 
-		const viewSelection = this.editor.editing.view.document.selection;
-		const selectedElement = viewSelection.getSelectedElement();
-
-		// It could be that the element the resizer is created for is currently focused. In that
-		// case it should become visible.
-		if ( this.getResizerByViewElement( selectedElement ) == resizer ) {
-			this.visibleResizer = resizer;
-		}
-
 		return resizer;
-	}
-
-	/**
-	 * Returns a resizer created for a given view element (widget element).
-	 *
-	 * @param {module:engine/view/containerelement~ContainerElement} viewElement View element associated with the resizer.
-	 * @returns {module:widget/widgetresize/resizer~Resizer|undefined}
-	 */
-	getResizerByViewElement( viewElement ) {
-		return this._resizers.get( viewElement );
 	}
 
 	/**
@@ -183,6 +165,17 @@ export default class WidgetResize extends Plugin {
 				return resizer;
 			}
 		}
+	}
+
+	/**
+	 * Returns a resizer created for a given view element (widget element).
+	 *
+	 * @protected
+	 * @param {module:engine/view/containerelement~ContainerElement} viewElement
+	 * @returns {module:widget/widgetresize/resizer~Resizer}
+	 */
+	_getResizerByViewElement( viewElement ) {
+		return this._resizers.get( viewElement );
 	}
 
 	/**

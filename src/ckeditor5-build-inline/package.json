@@ -1,29 +1,39 @@
 {
-  "name": "@ckeditor/ckeditor5-build-inline",
-  "version": "23.1.0",
+  "_from": "@ckeditor/ckeditor5-build-inline",
+  "_id": "@ckeditor/ckeditor5-build-inline@23.1.0",
+  "_inBundle": false,
+  "_integrity": "sha512-SrboOm2cjhbsRkqf6fT0asiG65CCPMko680qIyMPgepKIfsCENfkZf3mLL1vOlOiDk/JtvciWrjq2fzNK9LhNA==",
+  "_location": "/@ckeditor/ckeditor5-build-inline",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@ckeditor/ckeditor5-build-inline",
+    "name": "@ckeditor/ckeditor5-build-inline",
+    "escapedName": "@ckeditor%2fckeditor5-build-inline",
+    "scope": "@ckeditor",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@ckeditor/ckeditor5-build-inline/-/ckeditor5-build-inline-23.1.0.tgz",
+  "_shasum": "27035522601b50f43ee11032fadb54509a1e5e25",
+  "_spec": "@ckeditor/ckeditor5-build-inline",
+  "_where": "C:\\Users\\Kolyan\\Downloads\\ckeditor5 (1)",
+  "author": {
+    "name": "CKSource",
+    "url": "http://cksource.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/ckeditor/ckeditor5/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "The inline editor build of CKEditor 5 – the best browser-based rich text editor.",
-  "keywords": [
-    "ckeditor5-build",
-    "ckeditor",
-    "ckeditor5",
-    "ckeditor 5",
-    "wysiwyg",
-    "rich text",
-    "editor",
-    "html",
-    "contentEditable",
-    "editing",
-    "operational transformation",
-    "ot",
-    "collaboration",
-    "collaborative",
-    "real-time",
-    "framework"
-  ],
-  "main": "./build/ckeditor.js",
-  "files": [
-    "build"
-  ],
   "devDependencies": {
     "@ckeditor/ckeditor5-adapter-ckfinder": "^23.1.0",
     "@ckeditor/ckeditor5-autoformat": "^23.1.0",
@@ -45,8 +55,8 @@
     "@ckeditor/ckeditor5-paragraph": "^23.1.0",
     "@ckeditor/ckeditor5-paste-from-office": "^23.1.0",
     "@ckeditor/ckeditor5-table": "^23.1.0",
-    "@ckeditor/ckeditor5-typing": "^23.1.0",
     "@ckeditor/ckeditor5-theme-lark": "^23.1.0",
+    "@ckeditor/ckeditor5-typing": "^23.1.0",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^4.0.1",
     "style-loader": "^1.2.1",
@@ -58,17 +68,57 @@
     "node": ">=12.0.0",
     "npm": ">=5.7.1"
   },
-  "author": "CKSource (http://cksource.com/)",
-  "license": "GPL-2.0-or-later",
+  "files": [
+    "build"
+  ],
   "homepage": "https://ckeditor.com/ckeditor-5",
-  "bugs": "https://github.com/ckeditor/ckeditor5/issues",
+  "keywords": [
+    "ckeditor5-build",
+    "ckeditor",
+    "ckeditor5",
+    "ckeditor 5",
+    "wysiwyg",
+    "rich text",
+    "editor",
+    "html",
+    "contentEditable",
+    "editing",
+    "operational transformation",
+    "ot",
+    "collaboration",
+    "collaborative",
+    "real-time",
+    "framework"
+  ],
+  "license": "GPL-2.0-or-later",
+  "main": "./build/ckeditor.js",
+  "name": "@ckeditor/ckeditor5-build-inline",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ckeditor/ckeditor5.git",
+    "url": "git+https://github.com/ckeditor/ckeditor5.git",
     "directory": "packages/ckeditor5-build-inline"
   },
   "scripts": {
     "build": "webpack --mode production",
     "preversion": "npm run build"
-  }
+  },
+  "version": "23.1.0",
+  "warnings": [
+    {
+      "code": "ENOTSUP",
+      "required": {
+        "node": ">=12.0.0",
+        "npm": ">=5.7.1"
+      },
+      "pkgid": "@ckeditor/ckeditor5-build-inline@23.1.0"
+    },
+    {
+      "code": "ENOTSUP",
+      "required": {
+        "node": ">=12.0.0",
+        "npm": ">=5.7.1"
+      },
+      "pkgid": "@ckeditor/ckeditor5-build-inline@23.1.0"
+    }
+  ]
 }

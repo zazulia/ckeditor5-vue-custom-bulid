@@ -50,5 +50,20 @@
   },
   "scripts": {
     "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-adapter-ckfinder": "^23.1.0",
+    "@ckeditor/ckeditor5-build-balloon": "^23.1.0",
+    "@ckeditor/ckeditor5-build-balloon-block": "^23.1.0",
+    "@ckeditor/ckeditor5-build-classic": "^23.1.0",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^23.1.0",
+    "@ckeditor/ckeditor5-build-inline": "^23.1.0",
+    "@ckeditor/ckeditor5-cloud-services": "^23.1.0",
+    "@ckeditor/ckeditor5-editor-balloon": "^23.1.0",
+    "@ckeditor/ckeditor5-editor-decoupled": "^23.1.0",
+    "@ckeditor/ckeditor5-editor-inline": "^23.1.0",
+    "@ckeditor/ckeditor5-mention": "^23.1.0",
+    "@ckeditor/ckeditor5-restricted-editing": "^23.1.0",
+    "@ckeditor/ckeditor5-watchdog": "^23.1.0"
   }
 }

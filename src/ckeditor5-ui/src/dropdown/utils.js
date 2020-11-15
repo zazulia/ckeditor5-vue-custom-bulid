@@ -110,7 +110,7 @@ export function createDropdown( locale, ButtonClass = DropdownButtonView ) {
  *
  *		// Either create a new ButtonView instance or create existing.
  *		buttons.push( new ButtonView() );
- *		buttons.push( editor.ui.componentFactory.create( 'someButton' ) );
+ *		buttons.push( editor.ui.componentFactory.get( 'someButton' ) );
  *
  *		const dropdown = createDropdown( locale );
  *
