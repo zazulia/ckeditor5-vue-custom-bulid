@@ -210,10 +210,7 @@ export default class ImagePresetsUI extends Plugin {
                         
                         let { presetsOptions = [], uuid = '' } = data || {};
                                                 
-                        if (presetsOptions.length && uuid === viewImgUuid) {
-                            
-                            console.log('ViewImg', ViewImg, uuid, viewImgUuid, presetsOptions);
-                            
+                        if (presetsOptions.length && uuid === viewImgUuid) {                            
 
                             for (let i in presetsOptions) {
                                 if (i < optionButtons.length) {

@@ -293,6 +293,9 @@ export default class ImageUploadEditing extends Plugin {
 		const notification = editor.plugins.get( Notification );
         
         this.optionsPresets = [];
+        
+        
+        editor.plugins.get('TextTransformation').isEnabled = false;
 
 		model.enqueueChange( 'transparent', writer => {
 			writer.setAttribute( 'uploadStatus', 'reading', imageElement );
