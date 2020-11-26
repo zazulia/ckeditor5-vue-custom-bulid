@@ -4,8 +4,10 @@ import SimpleUploadAdapter from '../../../ckeditor5-upload/src/adapters/simpleup
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
 import ImagePresetsFormView from './ui/imagepresetsformview';
+import ImagePresetsNotificationFormView from './ui/imagepresetsnotificationformview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import presetsIcon from '@ckeditor/ckeditor5-core/theme/icons/object-size-large.svg';
+import presetsCodeIcon from '@ckeditor/ckeditor5-basic-styles/theme/icons/code.svg';
 import { repositionContextualBalloon, getBalloonPositionData } from '@ckeditor/ckeditor5-image/src/image/ui/utils';
 import { getSelectedImageWidget } from '@ckeditor/ckeditor5-image/src/image/utils.js';
 import { isImage } from '@ckeditor/ckeditor5-image/src/image/utils';
@@ -37,7 +39,9 @@ export default class ImagePresetsUI extends Plugin {
         
         
 		this._createButton();
+        this._createButtonCopyShortcode();
 		this._createForm();
+		this._createFormNotification();
 	}
 
 	/**
@@ -85,6 +89,30 @@ export default class ImagePresetsUI extends Plugin {
 			return view;
 		} );
 	}
+    
+	_createButtonCopyShortcode() {
+		const editor = this.editor;
+		const t = editor.t;
+
+		editor.ui.componentFactory.add('imagePresets:copy', locale => {
+			const command = editor.commands.get('imagePresets');
+			const view = new ButtonView(locale);
+
+			view.set( {
+				label: t("Copy image preset's shortcode"),
+				icon: presetsCodeIcon,
+				tooltip: true
+			} );
+
+			view.bind('isEnabled').to(command, 'isEnabled', this, 'isEnabled', ( isCommandEnabled, isPluginVisible ) => isCommandEnabled && isPluginVisible);
+
+			this.listenTo( view, 'execute', () => {
+                this._showFormNotification();
+			} );
+
+			return view;
+		} );
+	}
 
 
 	_createForm() {
@@ -93,13 +121,6 @@ export default class ImagePresetsUI extends Plugin {
 		const view = editor.editing.view;
 		const viewDocument = view.document;
         
-        /*const simpleUploadAdapterPlugin = editor.plugins.get(SimpleUploadAdapter);
-        
-        simpleUploadAdapterPlugin.listenTo(simpleUploadAdapterPlugin, 'change:presetsOptions', function(evt, propName, newValue, oldValue) {
-           _this.presetsOptions = newValue;
-        });*/
-
-
 		this._balloon = this.editor.plugins.get('ContextualBalloon');
 
 		this._form = new ImagePresetsFormView( editor.locale );
@@ -237,15 +258,6 @@ export default class ImagePresetsUI extends Plugin {
 				position: getBalloonPositionData( editor )
 			} );
 		}        
-        
-        
-        /*for (let i in this.presetsOptions) {
-            if (i < optionButtons.length) {
-                optionButtons[i].label = this.presetsOptions[i].name;
-                optionButtons[i].isVisible = true;
-            }
-        }*/
-
 	}
 
 	_hideForm( focusEditable ) {
@@ -282,6 +294,155 @@ export default class ImagePresetsUI extends Plugin {
 			this.editor.editing.view.focus();
 		}
 	}
+    
+    _createFormNotification() {
+        let _this = this;
+		const editor = this.editor;
+		const view = editor.editing.view;
+		const viewDocument = view.document;
+        
+		this._balloonNotify = editor.plugins.get('ContextualBalloon');
+        
+        this._notify = new ImagePresetsNotificationFormView(editor.locale);
+		this._notify.render();
+        this._notifyTimeoutID = null;
+        
+		// Close the form on Esc key press.
+		this._notify.keystrokes.set( 'Esc', ( data, cancel ) => {
+            if(_this._notifyTimeoutID) {
+                clearTimeout(_this._notifyTimeoutID);
+            }
+			this._hideFormNotification( true );
+			cancel();
+		} );
+
+		// Reposition the balloon or hide the form if an image widget is no longer selected.
+		this.listenTo( editor.ui, 'update', () => {
+			if ( !getSelectedImageWidget( viewDocument.selection ) ) {
+                if(_this._notifyTimeoutID) {
+                    clearTimeout(_this._notifyTimeoutID);
+                }
+				this._hideFormNotification( true );
+			} else if ( this._isVisibleNotification ) {
+				repositionContextualBalloon( editor );
+			}
+		} );
+
+		// Close on click outside of balloon panel element.
+		clickOutsideHandler( {
+			emitter: this._notify,
+			activator: () => this._isVisibleNotification,
+			contextElements: [ this._balloonNotify.view.element ],
+			callback: function() {
+                if(_this._notifyTimeoutID) {
+                    clearTimeout(_this._notifyTimeoutID);
+                }
+                _this._hideFormNotification()
+            }
+		} );
+    }
+    
+    
+	_showFormNotification() {
+        let _this = this;
+        
+		if ( this._isVisibleNotification ) {
+			return;
+		}
+
+		const editor = this.editor;
+        
+		const element = editor.model.document.selection.getSelectedElement();
+        const ViewFigure = editor.editing.mapper.toViewElement(element);
+        
+		const t = editor.locale.t;
+                
+        if (isImage(element) && ViewFigure.hasOwnProperty('name') && ViewFigure.name === 'figure') {
+            const ViewImg = ViewFigure.getChild(0);
+                        
+            if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
+                
+                let attrUuid = ViewImg.getAttribute('uuid');
+                let attrPreset = ViewImg.getAttribute('preset');
+                
+                if (attrUuid && attrPreset) {
+                
+                    try {
+                        let shortcode = '[file:' + attrUuid + ':' + attrPreset + ']';
+                        this._copyToClipboard(shortcode);
+                        
+                        this._notify.textView.text = t('Image\'s preset shortcode was copied in buffer');
+                        
+                        
+                    } catch(err) {                   
+                        this._notify.textView.text = t('Can`t copy image\'s preset shortcode');
+                    }
+                
+                } else {
+                    this._notify.textView.text = t('Can`t copy image\'s preset shortcode');
+                }
+                
+            }
+        }
+        
+        this._notifyTimeoutID = setTimeout(() => {
+            if (!this._isVisibleNotification ) {
+                
+                if(this._notifyTimeoutID) {
+                    clearTimeout(this._notifyTimeoutID);
+                }
+                
+                return;
+            }
+            this._hideFormNotification();            
+        }, 1500);
+        
+
+		if ( !this._isInBalloonNotification ) {            
+			this._balloonNotify.add( {
+				view: this._notify,
+				position: getBalloonPositionData( editor )
+			} );
+		}        
+	}
+    
+    _copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        if (selected) {
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(selected);
+        }
+    }
+    
+
+	_hideFormNotification(focusEditable ) {
+		if ( !this._isInBalloonNotification ) {
+			return;
+		}
+        
+        const textView = this._notify.textView;
+        textView.text = '';
+        
+        if(this._notifyTimeoutID) {
+            clearTimeout(this._notifyTimeoutID);
+        }
+
+		this._balloonNotify.remove(this._notify);
+
+		if ( focusEditable ) {
+			this.editor.editing.view.focus();
+		}
+	}
+    
     
     callbackPromise(resolve, reject, uuid, presetsArr) {
         
@@ -536,5 +697,15 @@ export default class ImagePresetsUI extends Plugin {
 
 	get _isInBalloon() {
 		return this._balloon.hasView( this._form );
+	}
+    
+    
+	get _isVisibleNotification() {
+		return this._balloonNotify.visibleView === this._notify;
+	}
+
+
+	get _isInBalloonNotification() {
+		return this._balloonNotify.hasView( this._notify );
 	}
 }

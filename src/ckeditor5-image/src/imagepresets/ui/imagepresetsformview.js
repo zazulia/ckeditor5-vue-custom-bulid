@@ -15,11 +15,7 @@ import checkIcon from '@ckeditor/ckeditor5-core/theme/icons/check.svg';
 import cancelIcon from '@ckeditor/ckeditor5-core/theme/icons/cancel.svg';
 import '../../../theme/imagepresetsform.css';
 
-/**
- * The TextAlternativeFormView class.
- *
- * @extends module:ui/view~View
- */
+
 export default class ImagePresetsFormView extends View {
 	/**
 	 * @inheritDoc
