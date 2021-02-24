@@ -161,6 +161,8 @@ export default class ImagePresetsUI extends Plugin {
                             
                             for (let i in presets) {
                                 if (currentPreset === presets[i].name) {
+                                    console.log(currentPreset, presets[i].name);
+                                    
                                     presets[i].value = presetsOptionsMap[currentPreset].value
                                 }
                             }
