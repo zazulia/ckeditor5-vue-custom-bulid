@@ -39,6 +39,9 @@ export default class ImagePresetsUI extends Plugin {
         this.xhrLoadPreset = null;
         
         
+        this.imagePresetsUIPlugin = this.editor.plugins.get('ImagePresetsUI');
+        
+        
 		this._createButton();
         this._createButtonCopyShortcode();
 		this._createForm();
@@ -156,6 +159,8 @@ export default class ImagePresetsUI extends Plugin {
                         
                         this.xhrLoadPreset = new XMLHttpRequest();
                         
+                        this.imagePresetsUIPlugin.forceDisabled('disableCurrentPreset' + uuid);
+                        
                         this._sendRequestLoadPreset(function(data) {
                             
                             
@@ -176,11 +181,15 @@ export default class ImagePresetsUI extends Plugin {
                                 _this.xhrLoadPreset = null;
                             }
                             
+                            _this.imagePresetsUIPlugin.clearForceDisabled('disableCurrentPreset' + uuid);
+                            
                         }, function() {
                             if (_this.xhrLoadPreset) {
                                 _this.xhrLoadPreset.abort();
                                 _this.xhrLoadPreset = null;
                             }
+                            
+                            _this.imagePresetsUIPlugin.clearForceDisabled('disableCurrentPreset' + uuid);
                         }, uuid, [evt.source.label]);
                         
                     }
