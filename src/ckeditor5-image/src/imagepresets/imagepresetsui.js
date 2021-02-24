@@ -36,6 +36,7 @@ export default class ImagePresetsUI extends Plugin {
         this.configSimpleUpload = this.editor.config.get('simpleUpload');
         this.xhrPresets = null;
         this.xhrLoad = null;
+        this.xhrLoadPreset = null;
         
         
 		this._createButton();
@@ -58,6 +59,11 @@ export default class ImagePresetsUI extends Plugin {
         if (this.xhrLoad) {
             this.xhrLoad.abort();
             this.xhrLoad = null;
+        }
+        
+        if (this.xhrLoadPreset) {
+            this.xhrLoadPreset.abort();
+            this.xhrLoadPreset = null;
         }
         
 
@@ -148,7 +154,9 @@ export default class ImagePresetsUI extends Plugin {
                                     
                     if (presets !== undefined) {
                         
-                        this._sendRequestLoad(function(uuid, currentPreset, presetsOptions, presetsOptionsMap) {
+                        this.xhrLoadPreset = new XMLHttpRequest();
+                        
+                        this._sendRequestLoadPreset(function(uuid, currentPreset, presetsOptions, presetsOptionsMap) {
                             
                             for (let i in presets) {
                                 if (currentPreset === presets[i].name) {
@@ -162,8 +170,16 @@ export default class ImagePresetsUI extends Plugin {
                                 newValue: {src: _this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
                             });
                             
-                        }, function() {
+                            if (_this.xhrLoadPreset) {
+                                _this.xhrLoadPreset.abort();
+                                _this.xhrLoadPreset = null;
+                            }
                             
+                        }, function() {
+                            if (_this.xhrLoadPreset) {
+                                _this.xhrLoadPreset.abort();
+                                _this.xhrLoadPreset = null;
+                            }
                         }, uuid, [evt.source.label]);
                         
                     }
@@ -592,8 +608,8 @@ export default class ImagePresetsUI extends Plugin {
         if (this.xhrLoad.upload) {
             this.xhrLoad.upload.addEventListener('progress', evt => {
                 if (evt.lengthComputable) {
-                    loader.uploadTotal = evt.total;
-                    loader.uploaded = evt.loaded;
+                    /*loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;*/
                 }
             });
         }
@@ -623,6 +639,117 @@ export default class ImagePresetsUI extends Plugin {
         this.xhrLoad.send(data);
     }
     
+    
+    
+    
+    
+    _initListenersLoadPreset(resolve, reject, uuid, presets) {
+        let _this = this;
+
+        this.xhrLoadPreset.addEventListener('error', reject);
+        
+        this.xhrLoadPreset.addEventListener('abort', reject);
+        
+        this.xhrLoadPreset.addEventListener('load', () => {
+            const response = JSON.parse(_this.xhrLoadPreset.response);
+
+            if (!_this.xhrLoadPreset.response || (response.hasOwnProperty('status') && (response.status === 'ERROR' || response.status === 'EXEPTION'))) {
+                return reject();
+            }
+            
+            if (response.hasOwnProperty('data') && response.data.hasOwnProperty('files')) {
+                                
+                let files = response.data.files;
+                let urls = [];
+                let presetsToolbar = [];
+                let presetsToolbarMap = {};
+                
+                for (let index in files) {
+                    
+                    for (let indexPreset in presets) {
+                        
+                        let linkStr = files[index].hasOwnProperty(presets[indexPreset]) ? _this.getLink(files[index][presets[indexPreset]].links) : '';
+                        urls.push(linkStr);
+                        
+                        presetsToolbar.push({
+                            name: presets[indexPreset],
+                            value: linkStr,
+                            icon: ''
+                        });
+                        
+                        presetsToolbarMap[presets[indexPreset]] = {
+                            name: presets[indexPreset],
+                            value: linkStr,
+                            icon: ''
+                        }
+                    }
+                }
+                
+                let currentPreset = '';
+                
+                if (urls.length) {
+                    if (presetsToolbarMap.hasOwnProperty('large')) {
+                        currentPreset = 'large';
+                    } else {
+                        currentPreset = presets[0];
+                    }
+                }
+                
+                if (urls.length) {
+                    
+                    if(presetsToolbarMap.hasOwnProperty('large')) {
+                        
+                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar, presetsOptionsMap: presetsToolbarMap});
+
+                    } else {
+                        
+                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar, presetsOptionsMap: presetsToolbarMap});
+                        
+                    }
+                } else {
+                    reject();
+                }
+                
+            } else {
+                reject();
+            }
+        });
+
+        // Upload progress when it is supported.
+        /* istanbul ignore else */
+        if (this.xhrLoadPreset.upload) {
+            this.xhrLoadPreset.upload.addEventListener('progress', evt => {
+                if (evt.lengthComputable) {
+                    /*loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;*/
+                }
+            });
+        }
+    }
+    
+    _sendRequestLoadPreset(resolve, reject, uuid, presets) {
+        
+        this._initListenersLoadPreset(resolve, reject, uuid, presets);
+        
+        const data = this._createFormLoad(uuid, this.configSimpleUpload, presets);
+                
+        this.xhrLoadPreset.open('GET', this.configSimpleUpload.loadUrl + '?' + this._getQueryString(data), true);
+                
+        // Set headers if specified.
+        const headers = this.configSimpleUpload.headers || {};
+
+        // Use the withCredentials flag if specified.
+        const withCredentials = this.configSimpleUpload.withCredentials || false;
+
+        Object.keys(headers).forEach((headerName) => {
+            this.xhrLoadPreset.setRequestHeader(headerName, headers[headerName]);
+        });
+
+        this.xhrLoadPreset.withCredentials = withCredentials;
+
+        // Send the request.
+        this.xhrLoadPreset.send(data);
+    }
     
     _getQueryArray(obj, path = [], result = []) {
         let _this = this;
