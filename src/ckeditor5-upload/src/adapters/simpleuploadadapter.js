@@ -395,7 +395,8 @@ class Adapter {
                     
                     for (let indexPreset in presets) {
                         
-                        let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
+                        
+                        let linkStr = files[index].hasOwnProperty(presets[indexPreset]) ? _this.getLink(files[index][presets[indexPreset]].links) : '';
                         urls.push(linkStr);
                         
                         presetsToolbar.push({
