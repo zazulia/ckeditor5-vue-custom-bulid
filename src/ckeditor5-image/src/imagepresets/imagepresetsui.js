@@ -161,12 +161,9 @@ export default class ImagePresetsUI extends Plugin {
                             
                             for (let i in presets) {
                                 if (data.preset === presets[i].name) {                                    
-                                    presets[i].value = presetsOptionsMap[data.preset].value
+                                    presets[i].value = data.presetsOptionsMap[data.preset].value
                                 }
                             }
-                            
-                            
-                            console.log('resolve _sendRequestLoadPreset', presets);
                             
                                                         
                             ViewImg._customProperties.set('presets', presets);
