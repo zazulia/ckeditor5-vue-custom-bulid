@@ -157,10 +157,9 @@ export default class ImagePresetsUI extends Plugin {
                             }
                                                         
                             ViewImg._customProperties.set('presets', presets);
-                            
-                            
+                                                        
                             editor.execute('imagePresets', {
-                                newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
+                                newValue: {src: _this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
                             });
                             
                         }, function() {
