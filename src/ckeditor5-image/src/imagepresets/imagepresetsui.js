@@ -157,12 +157,17 @@ export default class ImagePresetsUI extends Plugin {
                         this.xhrLoadPreset = new XMLHttpRequest();
                         
                         this._sendRequestLoadPreset(function(uuid, currentPreset, presetsOptions, presetsOptionsMap) {
+                                                       
                             
                             for (let i in presets) {
                                 if (currentPreset === presets[i].name) {
                                     presets[i].value = presetsOptionsMap[currentPreset].value
                                 }
                             }
+                            
+                            
+                            console.log('resolve _sendRequestLoadPreset', uuid, currentPreset, presetsOptions, presetsOptionsMap);
+                            
                                                         
                             ViewImg._customProperties.set('presets', presets);
                                                         
