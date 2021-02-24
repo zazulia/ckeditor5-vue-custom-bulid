@@ -164,12 +164,11 @@ export default class ImagePresetsUI extends Plugin {
                                     presets[i].value = data.presetsOptionsMap[data.preset].value
                                 }
                             }
-                            
                                                         
                             ViewImg._customProperties.set('presets', presets);
                                                         
                             editor.execute('imagePresets', {
-                                newValue: {src: _this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
+                                newValue: {src: _this.getOptionPreset(presets, data.preset), 'preset': data.preset}
                             });
                             
                             if (_this.xhrLoadPreset) {
@@ -641,10 +640,6 @@ export default class ImagePresetsUI extends Plugin {
         this.xhrLoad.send(data);
     }
     
-    
-    
-    
-    
     _initListenersLoadPreset(resolve, reject, uuid, presets) {
         let _this = this;
 
@@ -821,7 +816,7 @@ export default class ImagePresetsUI extends Plugin {
         return true;
     }
     
-    getOptionPreset(presets, name) {
+    getOptionPreset(presets, name) {        
         for (let i in presets) {
             if (presets[i].name === name) {
                 return presets[i].value;
