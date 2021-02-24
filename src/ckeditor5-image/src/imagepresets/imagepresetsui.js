@@ -166,7 +166,7 @@ export default class ImagePresetsUI extends Plugin {
                             }
                             
                             
-                            console.log('resolve _sendRequestLoadPreset', uuid, currentPreset, presetsOptions, presetsOptionsMap);
+                            console.log('resolve _sendRequestLoadPreset', presets);
                             
                                                         
                             ViewImg._customProperties.set('presets', presets);
