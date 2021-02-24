@@ -535,17 +535,11 @@ class Adapter {
         
         data.files = [uuid];
         data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
-        
-        
-        console.log(opts.presets, opts.presets.indexOf('large'));
-        
         if (opts.presets.length && opts.presets.indexOf('large') > 0) {
             data.presets = ['large'];
         } else {
             data.presets = opts.presets.length ? opts.presets : [];
         }
-        
-        console.log(data);
         
         return data;
     }
