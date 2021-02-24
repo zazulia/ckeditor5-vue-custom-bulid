@@ -128,19 +128,13 @@ export default class ImagePresetsUI extends Plugin {
 		// Render the form so its #element is available for clickOutsideHandler.
 		this._form.render();
 
-		/*this.listenTo( this._form, 'submit', () => {
-			editor.execute('imagePresets', {
-				newValue: this._form.labeledInput.fieldView.element.value
-			} );
-
-			this._hideForm( true );
-		} );*/
-
 		this.listenTo( this._form, 'cancel', () => {
 			this._hideForm( true );
 		} );
         
         this.listenTo(this._form, 'presetExecute', ( evt, data ) => {
+            
+            let _this = this;
             
             const element = this.editor.model.document.selection.getSelectedElement();
             const ViewFigure = this.editor.editing.mapper.toViewElement(element);
@@ -150,12 +144,28 @@ export default class ImagePresetsUI extends Plugin {
                 
                 if (ViewImg.hasOwnProperty('name') && ViewImg.name === 'img') {
                     let presets = ViewImg.getCustomProperty('presets');
+                    let uuid = ViewImg.getAttribute('uuid');
                                     
                     if (presets !== undefined) {
-                                                
-                        editor.execute('imagePresets', {
-                            newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
-                        });
+                        
+                        this._sendRequestLoad(function(uuid, currentPreset, presetsOptions, presetsOptionsMap) {
+                            
+                            for (let i in presets) {
+                                if (currentPreset === presets[i].name) {
+                                    presets[i].value = presetsOptionsMap[currentPreset].value
+                                }
+                            }
+                                                        
+                            ViewImg._customProperties.set('presets', presets);
+                            
+                            
+                            editor.execute('imagePresets', {
+                                newValue: {src: this.getOptionPreset(presets, evt.source.label), 'preset': evt.source.label}
+                            });
+                            
+                        }, function() {
+                            
+                        }, uuid, [evt.source.label]);
                         
                     }
                 }
@@ -246,7 +256,6 @@ export default class ImagePresetsUI extends Plugin {
                         
                     }, function() {
                         
-                        console.log('second func');
                     }, attrUuid);
                 }
             }
@@ -532,7 +541,7 @@ export default class ImagePresetsUI extends Plugin {
                     
                     for (let indexPreset in presets) {
                         
-                        let linkStr = _this.getLink(files[index][presets[indexPreset]].links);
+                        let linkStr = files[index].hasOwnProperty(presets[indexPreset]) ? _this.getLink(files[index][presets[indexPreset]].links) : '';
                         urls.push(linkStr);
                         
                         presetsToolbar.push({
@@ -563,11 +572,11 @@ export default class ImagePresetsUI extends Plugin {
                     
                     if(presetsToolbarMap.hasOwnProperty('large')) {
                         
-                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
+                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar, presetsOptionsMap: presetsToolbarMap});
 
                     } else {
                         
-                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar});
+                        resolve({uuid: uuid, preset: currentPreset, presetsOptions: presetsToolbar, presetsOptionsMap: presetsToolbarMap});
                         
                     }
                 } else {
@@ -644,8 +653,12 @@ export default class ImagePresetsUI extends Plugin {
         
         data.files = [uuid];
         data.fileinfo = opts.fileInfo ? opts.fileInfo : false;
-        data.presets = presets.length ? presets : [];
-
+        
+        if (presets.length && presets.indexOf('large') > 0) {
+            data.presets = ['large'];
+        } else {
+            data.presets = presets.length ? presets : [];
+        }
         
         return data;
     }
